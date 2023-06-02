@@ -3,25 +3,18 @@
 import discord
 from discord.ext import commands
 
-from dotenv import load_dotenv
+from ext import models
 import os
 
 from utils import botdb
 import asyncpg
 
+
+from dotenv import load_dotenv
 load_dotenv()
 
 
-bot = commands.Bot(
-    command_prefix='!',
-    intents=discord.Intents.all(),
-    case_insensitive=True,
-    status=discord.Status.idle,
-    activity=discord.Activity(type=discord.ActivityType.watching, name="my development"),
-    guild=discord.Object(
-        os.getenv('guild_id')
-    )
-)
+bot = models.AyuBot()
 
 bot.db: None
 
@@ -37,7 +30,7 @@ async def load_cogs():
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
     bot.db = await botdb.connection()
-    # await botdb.delete_table(bot.db) # -- for testing purpose --
+    # await botdb.delete_table(bot.db, 'afk') # -- for testing purpose --
     # await botdb.create_table(bot.db) # -- for testing purpose --
     await load_cogs()
     await bot.tree.sync()

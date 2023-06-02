@@ -44,7 +44,6 @@ class Listeners(commands.Cog):
                     "SELECT afk_reason, time FROM afk WHERE user_id = $1",
                     user.id
                 )
-                print(res)
                 if len(res)!=0:
                     await message.reply(
                         f"{user.display_name} is AFK: {res[0].get('afk_reason')} (<t:{res[0].get('time')}:R>)"

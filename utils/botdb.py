@@ -3,6 +3,7 @@ import os
 
 import asyncpg
 
+from ext import consts
 load_dotenv()
 
 async def connection() -> asyncpg.Connection:
@@ -24,15 +25,11 @@ async def connection() -> asyncpg.Connection:
 
 
 async def create_table(conn: asyncpg.Connection):
-    await conn.execute('''
-        CREATE TABLE IF NOT EXISTS afk (
-            user_id BIGINT,
-            afk_reason TEXT,
-            time BIGINT
-        )
-    ''')
+    await conn.execute(consts.AFK_CONFIG_SCHEMA)
     print('setup: afk')
 
-async def delete_table(conn: asyncpg.Connection):
-    await conn.execute('DROP TABLE afk')
-    print('deleted: afks')
+async def delete_table(conn: asyncpg.Connection, table: str = None):
+    if table is None:
+        return print('no table specified')
+    await conn.execute('DROP TABLE ?',(table))
+    print('deleted: ' + table)
