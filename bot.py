@@ -25,7 +25,7 @@ async def load_cogs():
         if cog.endswith('.py'):
             await bot.load_extension(f'cogs.{cog[:-3]}')
             print(f'Loaded {cog[:-3]} cog')
-
+ 
 @bot.event
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
