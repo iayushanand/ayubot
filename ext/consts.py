@@ -1,7 +1,7 @@
-import discord
-import os
 
+import discord
 from dotenv import load_dotenv
+
 load_dotenv()
 
 # ---------------------- bot ---------------------- #
@@ -13,8 +13,9 @@ BOT_COMMAND_PREFIX = "!"
 
 BOT_STATUS = discord.Status.idle
 
-BOT_ACTIVITY = discord.Activity(type=discord.ActivityType.watching, name="my development")
-
+BOT_ACTIVITY = discord.Activity(
+    type=discord.ActivityType.watching, name="my development"
+)
 
 
 # ---------------------- db ---------------------- #
