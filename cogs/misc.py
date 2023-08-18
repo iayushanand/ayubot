@@ -15,7 +15,7 @@ class Misc(commands.Cog):
 
     @app_commands.command(name="ping", description="Returns a pong message.")
     async def ping(self, interaction: discord.Interaction):
-        bot_ping = round(self.bot.latency*1000)
+        bot_ping = round(self.bot.latency * 1000)
         await interaction.response.send_message(f"{bot_ping} ms")
 
 

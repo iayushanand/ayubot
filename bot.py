@@ -2,7 +2,6 @@
 
 import os
 
-from discord.ext import commands
 from dotenv import load_dotenv
 
 from ext import models
@@ -16,11 +15,13 @@ bot.db: None
 
 cog_list = os.listdir("./cogs")
 
+
 async def load_cogs():
     for cog in cog_list:
         if cog.endswith(".py"):
             await bot.load_extension(f"cogs.{cog[:-3]}")
             print(f"Loaded {cog[:-3]} cog")
+
 
 @bot.event
 async def on_ready():
@@ -32,5 +33,6 @@ async def on_ready():
     # await botdb.create_table(bot.db) # -- for testing purpose --
     await load_cogs()
     await bot.tree.sync()
+
 
 bot.run(os.getenv("token"))
