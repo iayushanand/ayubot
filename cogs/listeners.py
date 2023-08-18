@@ -18,8 +18,6 @@ class Listeners(commands.Cog):
     async def _message(self, message: discord.Message):
         if message.author.bot:
             return
-        if message.content.startswith("!"):
-            return await self.bot.process_commands(message)
 
     @commands.Cog.listener(name="on_message")
     async def _afk_setup(self, message: discord.Message):

@@ -34,5 +34,5 @@ async def create_table(conn: asyncpg.Connection):
 async def delete_table(conn: asyncpg.Connection, table: str = None):
     if table is None:
         return print("no table specified")
-    await conn.execute("DROP TABLE ?", (table))
+    await conn.execute("DROP TABLE IF EXISTS $1", table)
     print("deleted: " + table)

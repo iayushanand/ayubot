@@ -4,8 +4,10 @@ import os
 
 from dotenv import load_dotenv
 
-from ext import models
+from ext import models, view
 from utils import botdb
+
+
 
 load_dotenv()
 
@@ -25,14 +27,14 @@ async def load_cogs():
 
 @bot.event
 async def on_ready():
-    print(f"{bot.user.name} has connected to Discord!")
-    print(f"Latency: {round(bot.latency*1000)} ms")
     bot.db = await botdb.connection()
+    # await botdb.delete_table(bot.db, 'gaway') # -- for testing purpose --
     await botdb.create_table(bot.db)
-    # await botdb.delete_table(bot.db, 'afk') # -- for testing purpose --
-    # await botdb.create_table(bot.db) # -- for testing purpose --
     await load_cogs()
     await bot.tree.sync()
+    bot.add_view(view = view.GiveawayView(bot = bot))
+    print(f"{bot.user.name} has connected to Discord!")
+    print(f"Latency: {round(bot.latency*1000)} ms")
 
 
 bot.run(os.getenv("token"))

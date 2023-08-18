@@ -40,14 +40,15 @@ class Giveaways(commands.Cog):
             except TimeoutError:
                 await msg.delete()
                 await og_message.edit(content="**Timeout**, be quicker next time")
+                return
             else:
                 await reply.delete()
                 answers.append(reply.content)
 
-            channel = self.bot.get_channel(int(answers[0][2:-1]))
-            end = int(time.time() + pytimeparser.parse(answers[1]).total_seconds())
-            winner = answers[2]
-            prize = answers[3]
+        channel = self.bot.get_channel(int(answers[0][2:-1]))
+        end = int(time.time() + pytimeparser.parse(answers[1]).total_seconds())
+        winner = answers[2]
+        prize = answers[3]
 
         await msg.delete()
 
@@ -60,19 +61,20 @@ class Giveaways(commands.Cog):
             .add_field(name="Prize:", value=prize, inline=False)
             .add_field(name="Host:", value=ctx.author.mention, inline=False)
             .add_field(name="Winners:", value=winner, inline=False)
-            .add_field(name="Ends:", value=f"<t:{end}:F> (<t:{end}:R)", inline=False)
+            .add_field(name="Ends:", value=f"<t:{end}:F> (<t:{end}:R>)", inline=False)
         )
 
         message = await channel.send(embed=embed, view=GiveawayView(self.bot))
         await self.db.execute(
             "INSERT INTO gaway VALUES ($1, $2, $3, $4, $5, $6)",
-            channel.id,
-            "",
+            int(channel.id),
             message.id,
-            prize,
             end,
-            winner,
+            prize,
+            int(winner),
+            "",
         )
+
         await og_message.edit(content="**Giveaway Started!**")
 
 
