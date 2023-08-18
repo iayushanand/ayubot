@@ -17,10 +17,10 @@ class GiveawayView(View):
     )
     async def enter(self, interaction: discord.Interaction, button: Button):
         await interaction.response.defer()
-        res = await self.db.execute(
-            "SELECT entries FROM gaway WHERE message = ?", (interaction.message.id)
+        res = await self.db.fetch(
+            "SELECT joins FROM gaway WHERE message = $1", interaction.message.id
         )
-        entries = await res.fetchone()
+        entries = res[0].get('joins')
         print(entries)
         if str(interaction.author.id) in entries:
             await interaction.followup.send(
