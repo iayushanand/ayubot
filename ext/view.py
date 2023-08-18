@@ -1,4 +1,3 @@
-
 import discord
 from discord.ext import commands
 from discord.ui import Button, View, button
@@ -20,7 +19,7 @@ class GiveawayView(View):
         res = await self.db.fetch(
             "SELECT joins FROM gaway WHERE message = $1", interaction.message.id
         )
-        entries = res[0].get('joins')
+        entries = res[0].get("joins")
         print(entries)
         if str(interaction.author.id) in entries:
             await interaction.followup.send(
