@@ -27,6 +27,8 @@ async def connection() -> asyncpg.Connection:
 async def create_table(conn: asyncpg.Connection):
     await conn.execute(consts.AFK_CONFIG_SCHEMA)
     print("setup: afk")
+    await conn.execute(consts.GIVEAWAY_CONFIG_SCHEMA)
+    print("setup: gaway")
 
 
 async def delete_table(conn: asyncpg.Connection, table: str = None):

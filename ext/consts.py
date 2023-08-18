@@ -8,7 +8,6 @@ load_dotenv()
 
 INTENTS = discord.Intents.all()
 
-# BOT_COMMAND_PREFIX = os.getenv('prefix')
 BOT_COMMAND_PREFIX = "!"
 
 BOT_STATUS = discord.Status.idle
@@ -25,5 +24,16 @@ CREATE TABLE IF NOT EXISTS afk (
         user_id BIGINT,
         afk_reason TEXT,
         time BIGINT
+    )
+"""
+
+GIVEAWAY_CONFIG_SCHEMA = """
+CREATE TABLE IF NOT EXISTS gaway (
+        channel_id BIGINT,
+        message_id BIGINT,
+        time BIGINT,
+        prize TEXT,
+        winners INTEGER,
+        joins TEXT
     )
 """
