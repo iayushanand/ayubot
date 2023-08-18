@@ -7,8 +7,6 @@ from dotenv import load_dotenv
 from ext import models, view
 from utils import botdb
 
-
-
 load_dotenv()
 
 bot = models.AyuBot()
@@ -32,7 +30,7 @@ async def on_ready():
     await botdb.create_table(bot.db)
     await load_cogs()
     await bot.tree.sync()
-    bot.add_view(view = view.GiveawayView(bot = bot))
+    bot.add_view(view=view.GiveawayView(bot=bot))
     print(f"{bot.user.name} has connected to Discord!")
     print(f"Latency: {round(bot.latency*1000)} ms")
 
