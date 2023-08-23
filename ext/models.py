@@ -1,15 +1,12 @@
 import os
 
 import discord
+from colorama import Fore, Style
 from discord.ext import commands
-
-from utils import botdb
 from dotenv import load_dotenv
 
-from ext import consts
-from ext import view
-
-from colorama import Fore, Style
+from ext import consts, view
+from utils import botdb
 
 load_dotenv()
 
@@ -25,7 +22,7 @@ class AyuBot(commands.Bot):
             activity=consts.BOT_ACTIVITY,
             guild=discord.Object(os.getenv("guild_id")),
         )
-    
+
     async def load_cogs(self):
         for cog in self.cog_list:
             if cog.endswith(".py"):

@@ -114,5 +114,6 @@ class TaskCog(commands.Cog):
             "DELETE FROM gaway WHERE message_id = $1", message_id
         )
 
+
 async def setup(bot: commands.Bot):
     await bot.add_cog(TaskCog(bot=bot))
