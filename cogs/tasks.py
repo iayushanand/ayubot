@@ -20,7 +20,6 @@ class TaskCog(commands.Cog):
 
     @tasks.loop(seconds=10)
     async def dump_level_data(self):
-        print(f"Level Cache: {self.bot.level_cache}")
         for user_data in self.bot.level_cache:
             res = await self.db.fetch(
                 "SELECT level, xp FROM level WHERE user_id = $1", user_data[0]
