@@ -1,10 +1,10 @@
 # ------------- import(s) ------------- #
 
 import asyncpg
-from utils.helper import get_xp
-
 import discord
 from discord.ext import commands
+
+from utils.helper import get_xp
 
 
 class Listeners(commands.Cog):
@@ -44,7 +44,7 @@ class Listeners(commands.Cog):
                     await message.reply(
                         f"{user.display_name} is AFK: {res[0].get('afk_reason')} (<t:{res[0].get('time')}:R>)"
                     )
-    
+
     @commands.Cog.listener(name="on_message")
     async def generate_level_cache(self, message: discord.Message):
         if message.author.bot:
@@ -56,7 +56,7 @@ class Listeners(commands.Cog):
                 self.bot.level_cache.remove(user_data)
                 self.bot.level_cache.append((user_data[0], new_xp))
                 print(self.bot.level_cache)
-                return 
+                return
 
         self.bot.level_cache.append((message.author.id, get_xp(message.content, 0.1)))
         print(self.bot.level_cache)

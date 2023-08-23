@@ -1,7 +1,7 @@
 import os
-from colorama import Fore
 
 import asyncpg
+from colorama import Fore
 from dotenv import load_dotenv
 
 from ext import consts

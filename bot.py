@@ -1,8 +1,8 @@
 # ======================= TEST PHASE ======================= #
 
 import os
-from colorama import Fore, Style
 
+from colorama import Fore, Style
 from dotenv import load_dotenv
 
 from ext import models, view
@@ -24,6 +24,7 @@ async def load_cogs():
             print(Fore.GREEN + f"Loaded {cog[:-3]} cog")
             print(Style.RESET_ALL, end="\r")
 
+
 @bot.event
 async def on_ready():
     bot.db = await botdb.connection()
@@ -36,7 +37,6 @@ async def on_ready():
     await load_cogs()
     await bot.tree.sync()
     bot.add_view(view=view.GiveawayView(bot=bot))
-    
 
 
 bot.run(os.getenv("token"))
