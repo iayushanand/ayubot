@@ -26,8 +26,11 @@ class AyuBot(commands.Bot):
     async def load_cogs(self):
         for cog in self.cog_list:
             if cog.endswith(".py"):
-                await self.load_extension(f"cogs.{cog[:-3]}")
-                print(Fore.GREEN + f"Loaded {cog[:-3]} cog")
+                try:
+                    await self.load_extension(f"cogs.{cog[:-3]}")
+                    print(Fore.GREEN + f"Loaded {cog[:-3]} cog")
+                except Exception as e:
+                    print(Fore.RED + f"{e}")
                 print(Style.RESET_ALL, end="\r")
 
     async def on_ready(self):
