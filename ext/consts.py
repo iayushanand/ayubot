@@ -36,3 +36,14 @@ CREATE TABLE IF NOT EXISTS gaway (
         joins TEXT
     )
 """
+
+LEVELLING_CONFIG_SCHEMA = """
+CREATE TABLE IF NOT EXISTS level (
+        user_id BIGINT,
+        xp FLOAT,
+        level INTEGER,
+        img_url TEXT,
+        prim_col TEXT,
+        sec_col TEXT
+    )
+"""

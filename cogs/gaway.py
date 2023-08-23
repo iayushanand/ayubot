@@ -17,7 +17,7 @@ class Giveaways(commands.Cog):
         self.db: asyncpg.Connection = bot.db
         super().__init__()
 
-    @commands.command(name="gstart")
+    @commands.command(name="gstart", help = "Start a giveaway")
     # ------------ add a role check --------------
     async def gstart(self, ctx: commands.Context):
         questions = [

@@ -15,8 +15,28 @@ class TaskCog(commands.Cog):
 
     async def cog_load(self) -> None:
         await self.giveaway_end.start()
+        await self.dump_level_data.start()
+    
+    @tasks.loop(seconds=10)
+    async def dump_level_data(self):
+        print(F"Level Cache: {self.bot.level_cache}")
+        for user_data in self.bot.level_cache:
+            res = await self.db.fetch("SELECT level, xp FROM level WHERE user_id = $1", user_data[0])
+            if len(res)==0:
+                await self.db.execute("INSER INTO level VALUES ($1, $2, $3, $4, $5, $6)", user_data[0], user_data[1], 1, "https://bit.ly/level-banner", "#ffffff", "##00FFFF")
+            else:
+                level = res[0].get('level')
+                xp = res[0].get('xp')
+                new_xp = xp+user_data[1]
+                if new_xp > level*100:
+                    await self.db.execute("UPDATE level SET xp=0, level=level+1 WHERE user_id = $1", user_data[0])
+                    general = self.bot.get_channel(809642450935218216)
+                    await general.send(embed=discord.Embed(description=f"<:upvote:810082923381784577> <@{user_data[0]}> You are now at **{level+1} level** GG!", color=discord.Color.magenta()))
+                    return
+                await self.db.execute("UPDATE level SET xp=xp+$1 WHERE user_id = $2", user_data[1], user_data[0])
+        self.bot.level_cache = []
 
-    @tasks.loop(seconds=5)
+    @tasks.loop(minutes=1)
     async def giveaway_end(self):
         res = await self.db.fetch(
             "SELECT * FROM gaway WHERE time <= $1", int(time.time())
@@ -71,7 +91,6 @@ class TaskCog(commands.Cog):
         return await self.db.execute(
             "DELETE FROM gaway WHERE message_id = $1", message_id
         )
-
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(TaskCog(bot=bot))

@@ -1,4 +1,5 @@
 import os
+from colorama import Fore
 
 import asyncpg
 from dotenv import load_dotenv
@@ -21,18 +22,20 @@ async def connection() -> asyncpg.Connection:
     # return await asyncpg.connect(host=host, port=port, user=user, password=password, database=db)
 
     dsn = os.getenv("postgres")
-    return await asyncpg.connect(dsn=dsn)
+    return await asyncpg.create_pool(dsn=dsn)
 
 
 async def create_table(conn: asyncpg.Connection):
     await conn.execute(consts.AFK_CONFIG_SCHEMA)
-    print("setup: afk")
+    print(Fore.CYAN + "setup: afk")
     await conn.execute(consts.GIVEAWAY_CONFIG_SCHEMA)
-    print("setup: gaway")
+    print(Fore.CYAN + "setup: gaway")
+    await conn.execute(consts.LEVELLING_CONFIG_SCHEMA)
+    print(Fore.CYAN + "setup: level")
 
 
 async def delete_table(conn: asyncpg.Connection, table: str = None):
     if table is None:
-        return print("no table specified")
+        return print(Fore.RED + "no table specified")
     await conn.execute("DROP TABLE IF EXISTS $1", table)
-    print("deleted: " + table)
+    print(Fore.RED + "deleted: " + table)
