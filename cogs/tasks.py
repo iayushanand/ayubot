@@ -17,7 +17,6 @@ class TaskCog(commands.Cog):
         self.dump_level_data.start()
         self.giveaway_end.start()
 
-
     @tasks.loop(seconds=10)
     async def dump_level_data(self):
         print(f"Level Cache: {self.bot.level_cache}")
