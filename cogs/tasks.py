@@ -14,8 +14,9 @@ class TaskCog(commands.Cog):
         self.db: asyncpg.Connection = bot.db
 
     async def cog_load(self) -> None:
-        await self.giveaway_end.start()
-        await self.dump_level_data.start()
+        self.dump_level_data.start()
+        self.giveaway_end.start()
+
 
     @tasks.loop(seconds=10)
     async def dump_level_data(self):
@@ -26,13 +27,13 @@ class TaskCog(commands.Cog):
             )
             if len(res) == 0:
                 await self.db.execute(
-                    "INSER INTO level VALUES ($1, $2, $3, $4, $5, $6)",
+                    "INSERT INTO level VALUES ($1, $2, $3, $4, $5, $6)",
                     user_data[0],
                     user_data[1],
                     1,
                     "https://bit.ly/level-banner",
+                    "#00ffff",
                     "#ffffff",
-                    "##00FFFF",
                 )
             else:
                 level = res[0].get("level")

@@ -34,7 +34,7 @@ class Levelling(commands.Cog):
             )
 
         av = member.display_avatar
-        BytesIO(await av.read())
+        av = BytesIO(await av.read())
         bg_url = res[0].get("img_url")
         main_text = str(member)
         bg = Image.open(requests.get(url=bg_url, stream=True).raw)

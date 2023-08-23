@@ -35,8 +35,8 @@ class AyuBot(commands.Bot):
 
     async def on_ready(self):
         self.db = await botdb.connection()
-        # await botdb.delete_table(bot.db, 'gaway') # -- for testing purpose --
-        # await botdb.create_table(bot.db)
+        # await botdb.delete_table(self.db, 'level') # -- for testing purpose --
+        # await botdb.create_table(self.db)
         print(Style.BRIGHT)
         print(Fore.YELLOW + f"{self.user.name} has connected to Discord!")
         print(Fore.YELLOW + f"Latency: {round(self.latency*1000)} ms")
