@@ -28,19 +28,19 @@ class AyuBot(commands.Bot):
             if cog.endswith(".py"):
                 try:
                     await self.load_extension(f"cogs.{cog[:-3]}")
-                    print(Fore.GREEN + f"Loaded {cog[:-3]} cog")
+                    print("\033[38;2;166;227;161m" + f"Loaded {cog[:-3]} cog")
                 except Exception as e:
-                    print(Fore.RED + f"{e}")
-                print(Style.RESET_ALL, end="\r")
+                    print("\033[38;2;243;139;168m" + f"{e}")
 
     async def on_ready(self):
         self.db = await botdb.connection()
         # await botdb.delete_table(self.db, 'level') # -- for testing purpose --
         # await botdb.create_table(self.db)
-        print(Style.BRIGHT)
-        print(Fore.YELLOW + f"{self.user.name} has connected to Discord!")
-        print(Fore.YELLOW + f"Latency: {round(self.latency*1000)} ms")
         print()
         await self.load_cogs()
         await self.tree.sync()
+        print(Style.BRIGHT)
+        print("\033[38;2;249;226;175m" + f"{self.user.name} has connected to Discord!")
+        print("\033[38;2;249;226;175m" + f"Latency: {round(self.latency*1000)} ms")
+        print(Style.RESET_ALL, end="\r")
         self.add_view(view=view.GiveawayView(bot=self))
