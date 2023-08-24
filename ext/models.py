@@ -1,7 +1,7 @@
 import os
 
 import discord
-from colorama import Fore, Style
+from colorama import Style
 from discord.ext import commands
 from dotenv import load_dotenv
 
