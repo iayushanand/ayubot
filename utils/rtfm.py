@@ -7,6 +7,7 @@ import zlib
 # https://github.com/Rapptz/RoboDanny/blob/715a5cf8545b94d61823f62db484be4fac1c95b1/cogs/api.py
 # This code is under the Mozilla Public License 2.0
 
+
 class SphinxObjectFileReader:
     # Inspired by Sphinx's InventoryFileReader
     BUFSIZE = 16 * 1024
@@ -87,7 +88,7 @@ class SphinxObjectFileReader:
             key = name if dispname == "-" else dispname
             prefix = f"{subdirective}:" if domain == "std" else ""
 
-            if projname == "discord.py" or projname=="pycord":
+            if projname == "discord.py" or projname == "pycord":
                 key = key.replace("discord.ext.commands.", "").replace("discord.", "")
 
             result[f"{prefix}{key}"] = os.path.join(url, location)

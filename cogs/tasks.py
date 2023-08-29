@@ -9,6 +9,7 @@ from discord.ext import commands, tasks
 
 from ext.consts import GENERAL_CHAT_ID
 
+
 class TaskCog(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
@@ -21,24 +22,22 @@ class TaskCog(commands.Cog):
     @tasks.loop(minutes=1)
     async def set_slowmode(self):
         channel: discord.TextChannel = self.bot.get_channel(GENERAL_CHAT_ID)
-        if self.bot.msgs > 30 and channel.slowmode_delay==0:
+        if self.bot.msgs > 30 and channel.slowmode_delay == 0:
             await channel.edit(slowmode_delay=2)
             await channel.send(
-                embed = 
-                    discord.Embed(
-                        description=f"<:tick:966707201064464395> Slowmode set for **2s** because chat is fast!",
-                        color=discord.Color.green()
-                    )
+                embed=discord.Embed(
+                    description=f"<:tick:966707201064464395> Slowmode set for **2s** because chat is fast!",
+                    color=discord.Color.green(),
                 )
-        if self.bot.msgs < 30 and channel.slowmode_delay>0:
+            )
+        if self.bot.msgs < 30 and channel.slowmode_delay > 0:
             await channel.edit(slowmode_delay=0)
             await channel.send(
-                embed = 
-                    discord.Embed(
-                        description=f"<:tick:966707201064464395> Slowmode set for **0s** because chat is fast!",
-                        color=discord.Color.green()
-                    )
+                embed=discord.Embed(
+                    description=f"<:tick:966707201064464395> Slowmode set for **0s** because chat is fast!",
+                    color=discord.Color.green(),
                 )
+            )
         self.bot.msgs = 0
 
     @tasks.loop(minutes=1)

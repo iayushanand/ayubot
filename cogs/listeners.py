@@ -4,8 +4,8 @@ import asyncpg
 import discord
 from discord.ext import commands
 
-from utils.helper import get_xp
 from ext.consts import GENERAL_CHAT_ID, LOG_CHANNEL_ID
+
 
 class Listeners(commands.Cog):
     """
@@ -44,7 +44,7 @@ class Listeners(commands.Cog):
                     await message.reply(
                         f"{user.display_name} is AFK: {res[0].get('afk_reason')} (<t:{res[0].get('time')}:R>)"
                     )
-        
+
     @commands.Cog.listener()
     async def on_reaction_add(self, react: discord.Reaction, user: discord.Member):
         msg = react.message
@@ -52,16 +52,16 @@ class Listeners(commands.Cog):
             if str(react.emoji) != "📌":
                 return
             await msg.pin(reason=f"Pinned by {user.name}#{user.discriminator}")
-            em = discord.Embed(
-                title="",
-                description="📌 Pinned a message",
-                color=discord.Color.dark_teal()
-            ).add_field(
-                name="Pin request by:",
-                value=user.mention
-            ).add_field(
-                name="Jump URL",
-                value=f"[click here]({react.message.jump_url})"
+            em = (
+                discord.Embed(
+                    title="",
+                    description="📌 Pinned a message",
+                    color=discord.Color.dark_teal(),
+                )
+                .add_field(name="Pin request by:", value=user.mention)
+                .add_field(
+                    name="Jump URL", value=f"[click here]({react.message.jump_url})"
+                )
             )
             logc = self.bot.get_channel(LOG_CHANNEL_ID)
             await logc.send(embed=em)
@@ -72,17 +72,19 @@ class Listeners(commands.Cog):
         if user.guild_permissions.manage_messages:
             if str(react.emoji) != "📌":
                 return
-            await msg.unpin(reason=f"Pinned Removed by {user.name}#{user.discriminator}")
-            em = discord.Embed(
-                title="",
-                description="📌 Unpinned a message",
-                color=discord.Color.dark_teal()
-            ).add_field(
-                name="Unpin request by:",
-                value=user.mention
-            ).add_field(
-                name="Jump URL",
-                value=f"[click here]({react.message.jump_url})"
+            await msg.unpin(
+                reason=f"Pinned Removed by {user.name}#{user.discriminator}"
+            )
+            em = (
+                discord.Embed(
+                    title="",
+                    description="📌 Unpinned a message",
+                    color=discord.Color.dark_teal(),
+                )
+                .add_field(name="Unpin request by:", value=user.mention)
+                .add_field(
+                    name="Jump URL", value=f"[click here]({react.message.jump_url})"
+                )
             )
             logc = self.bot.get_channel(LOG_CHANNEL_ID)
             await logc.send(embed=em)
@@ -133,7 +135,7 @@ class Listeners(commands.Cog):
     @commands.Cog.listener(name="on_message")
     async def autoslowmode(self, message: discord.Message):
         if message.channel.id == GENERAL_CHAT_ID:
-            self.bot.msgs+=1
+            self.bot.msgs += 1
 
 
 async def setup(bot: commands.Bot):

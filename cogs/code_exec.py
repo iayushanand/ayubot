@@ -1,9 +1,8 @@
 import re
-from discord import Color, Embed
 
+from discord import Color, Embed
 # import config
 from discord.ext import commands
-
 
 # async def create_guest_paste_bin(session, code):
 #     res = await session.post(
@@ -46,17 +45,12 @@ class CodeExec(commands.Cog):
             codeblock = ctx.fetch_message(ctx.message.reference.message_id)
         else:
             return await ctx.reply(
-                embed = Embed(
-                    title="Uh-oh",
-                    description="Can't find your code :("
-                )
+                embed=Embed(title="Uh-oh", description="Can't find your code :(")
             )
         matches = self.regex.findall(codeblock)
         if not matches:
             return await ctx.reply(
-                embed=Embed(
-                    title="Uh-oh", description="You forgot the codeblock :("
-                )
+                embed=Embed(title="Uh-oh", description="You forgot the codeblock :(")
             )
         lang = matches[0][0] or matches[0][1]
         if not lang:

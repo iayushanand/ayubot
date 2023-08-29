@@ -40,7 +40,7 @@ class RTFM(commands.Cog):
     aliases = {
         ("py", "py3", "python3", "python"): "python",
         ("dpy", "discord.py", "discordpy"): "discord.py",
-        ("pyc","py-cord"): "pycord",
+        ("pyc", "py-cord"): "pycord",
         ("np", "numpy", "num"): "numpy",
         ("pd", "pandas", "panda"): "pandas",
         ("pillow", "pil"): "pillow",
@@ -66,7 +66,7 @@ class RTFM(commands.Cog):
         "tensorflow": "https://github.com/mr-ubik/tensorflow-intersphinx/raw/master/tf2_py_objects.inv"
     }
 
-    def __init__(self,bot: commands.Bot) -> None:
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self.cache = {}
 
