@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 
 from utils.helper import get_xp
-
+from ext.consts import GENERAL_CHAT_ID, LOG_CHANNEL_ID
 
 class Listeners(commands.Cog):
     """
@@ -15,7 +15,7 @@ class Listeners(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.db: asyncpg.Connection = bot.db
-        self.bot.level_cache: list = []
+        self.bot.msgs: int = 0
 
     @commands.Cog.listener(name="on_message")
     async def _afk_setup(self, message: discord.Message):
@@ -44,22 +44,96 @@ class Listeners(commands.Cog):
                     await message.reply(
                         f"{user.display_name} is AFK: {res[0].get('afk_reason')} (<t:{res[0].get('time')}:R>)"
                     )
+        
+    @commands.Cog.listener()
+    async def on_reaction_add(self, react: discord.Reaction, user: discord.Member):
+        msg = react.message
+        if user.guild_permissions.manage_messages:
+            if str(react.emoji) != "📌":
+                return
+            await msg.pin(reason=f"Pinned by {user.name}#{user.discriminator}")
+            em = discord.Embed(
+                title="",
+                description="📌 Pinned a message",
+                color=discord.Color.dark_teal()
+            ).add_field(
+                name="Pin request by:",
+                value=user.mention
+            ).add_field(
+                name="Jump URL",
+                value=f"[click here]({react.message.jump_url})"
+            )
+            logc = self.bot.get_channel(LOG_CHANNEL_ID)
+            await logc.send(embed=em)
+
+    @commands.Cog.listener()
+    async def on_reaction_remove(self, react: discord.Reaction, user: discord.Member):
+        msg = react.message
+        if user.guild_permissions.manage_messages:
+            if str(react.emoji) != "📌":
+                return
+            await msg.unpin(reason=f"Pinned Removed by {user.name}#{user.discriminator}")
+            em = discord.Embed(
+                title="",
+                description="📌 Unpinned a message",
+                color=discord.Color.dark_teal()
+            ).add_field(
+                name="Unpin request by:",
+                value=user.mention
+            ).add_field(
+                name="Jump URL",
+                value=f"[click here]({react.message.jump_url})"
+            )
+            logc = self.bot.get_channel(LOG_CHANNEL_ID)
+            await logc.send(embed=em)
+
+    # @commands.Cog.listener(name="on_message")
+    # async def level_cache(self, message: discord.Message):
+    #     user
+    #     res = await self.db.fetch(
+    #             "SELECT level, xp FROM level WHERE user_id = $1", user_data[0]
+    #         )
+    #         if len(res) == 0:
+    #             await self.db.execute(
+    #                 "INSERT INTO level VALUES ($1, $2, $3, $4, $5, $6)",
+    #                 user_data[0],
+    #                 user_data[1],
+    #                 1,
+    #                 "https://bit.ly/level-banner",
+    #                 "#00ffff",
+    #                 "#ffffff",
+    #             )
+    #         else:
+    #             level = res[0].get("level")
+    #             xp = res[0].get("xp")
+    #             new_xp = xp + user_data[1]
+    #             if new_xp > level * 100:
+    #                 await self.db.execute(
+    #                     "UPDATE level SET xp=0, level=level+1 WHERE user_id = $1",
+    #                     user_data[0],
+    #                 )
+    #                 general = self.bot.get_channel(809642450935218216)
+    #                 await general.send(
+    #                     embed=discord.Embed(
+    #                         description=f"<:upvote:810082923381784577> <@{user_data[0]}> You are now at **{level+1} level** GG!",
+    #                         color=discord.Color.magenta(),
+    #                     )
+    #                 )
+    #                 return
+    #             await self.db.execute(
+    #                 "UPDATE level SET xp=xp+$1 WHERE user_id = $2",
+    #                 user_data[1],
+    #                 user_data[0],
+    #             )
+    #     self.bot.level_cache = []
+
+    #     self.bot.level_cache.append((message.author.id, get_xp(message.content, 0.1)))
+    #     print(self.bot.level_cache)
 
     @commands.Cog.listener(name="on_message")
-    async def generate_level_cache(self, message: discord.Message):
-        if message.author.bot:
-            return
-        for user_data in self.bot.level_cache:
-            if message.author.id == user_data[0]:
-                current_xp = user_data[1]
-                new_xp = get_xp(message.content, 0.1) + current_xp
-                self.bot.level_cache.remove(user_data)
-                self.bot.level_cache.append((user_data[0], new_xp))
-                print(self.bot.level_cache)
-                return
-
-        self.bot.level_cache.append((message.author.id, get_xp(message.content, 0.1)))
-        print(self.bot.level_cache)
+    async def autoslowmode(self, message: discord.Message):
+        if message.channel.id == GENERAL_CHAT_ID:
+            self.bot.msgs+=1
 
 
 async def setup(bot: commands.Bot):

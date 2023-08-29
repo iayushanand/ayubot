@@ -15,6 +15,11 @@ BOT_ACTIVITY = discord.Activity(
     type=discord.ActivityType.watching, name="my development"
 )
 
+GENERAL_CHAT_ID = 809642450935218216
+
+LOG_CHANNEL_ID = 1000070843449217175
+
+LEAVE_MESSAGE_CHANNEL_ID = 809642446899380254
 
 # ---------------------- db ---------------------- #
 

@@ -7,6 +7,7 @@ import asyncpg
 import discord
 from discord.ext import commands, tasks
 
+from ext.consts import GENERAL_CHAT_ID
 
 class TaskCog(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
@@ -14,48 +15,31 @@ class TaskCog(commands.Cog):
         self.db: asyncpg.Connection = bot.db
 
     async def cog_load(self) -> None:
-        self.dump_level_data.start()
+        self.set_slowmode.start()
         self.giveaway_end.start()
 
-    @tasks.loop(seconds=10)
-    async def dump_level_data(self):
-        for user_data in self.bot.level_cache:
-            res = await self.db.fetch(
-                "SELECT level, xp FROM level WHERE user_id = $1", user_data[0]
-            )
-            if len(res) == 0:
-                await self.db.execute(
-                    "INSERT INTO level VALUES ($1, $2, $3, $4, $5, $6)",
-                    user_data[0],
-                    user_data[1],
-                    1,
-                    "https://bit.ly/level-banner",
-                    "#00ffff",
-                    "#ffffff",
-                )
-            else:
-                level = res[0].get("level")
-                xp = res[0].get("xp")
-                new_xp = xp + user_data[1]
-                if new_xp > level * 100:
-                    await self.db.execute(
-                        "UPDATE level SET xp=0, level=level+1 WHERE user_id = $1",
-                        user_data[0],
+    @tasks.loop(minutes=1)
+    async def set_slowmode(self):
+        channel: discord.TextChannel = self.bot.get_channel(GENERAL_CHAT_ID)
+        if self.bot.msgs > 30 and channel.slowmode_delay==0:
+            await channel.edit(slowmode_delay=2)
+            await channel.send(
+                embed = 
+                    discord.Embed(
+                        description=f"<:tick:966707201064464395> Slowmode set for **2s** because chat is fast!",
+                        color=discord.Color.green()
                     )
-                    general = self.bot.get_channel(809642450935218216)
-                    await general.send(
-                        embed=discord.Embed(
-                            description=f"<:upvote:810082923381784577> <@{user_data[0]}> You are now at **{level+1} level** GG!",
-                            color=discord.Color.magenta(),
-                        )
-                    )
-                    return
-                await self.db.execute(
-                    "UPDATE level SET xp=xp+$1 WHERE user_id = $2",
-                    user_data[1],
-                    user_data[0],
                 )
-        self.bot.level_cache = []
+        if self.bot.msgs < 30 and channel.slowmode_delay>0:
+            await channel.edit(slowmode_delay=0)
+            await channel.send(
+                embed = 
+                    discord.Embed(
+                        description=f"<:tick:966707201064464395> Slowmode set for **0s** because chat is fast!",
+                        color=discord.Color.green()
+                    )
+                )
+        self.bot.msgs = 0
 
     @tasks.loop(minutes=1)
     async def giveaway_end(self):
