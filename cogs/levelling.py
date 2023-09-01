@@ -36,7 +36,7 @@ class Levelling(commands.Cog):
         av = member.display_avatar
         av = BytesIO(await av.read())
         bg_url = res[0].get("img_url")
-        main_text = str(member)
+        main_text = member.name
         bg = Image.open(requests.get(url=bg_url, stream=True).raw)
         xp = res[0].get("xp")
         lev = res[0].get("level")

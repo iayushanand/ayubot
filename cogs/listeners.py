@@ -4,7 +4,8 @@ import asyncpg
 import discord
 from discord.ext import commands
 
-from ext.consts import GENERAL_CHAT_ID, LOG_CHANNEL_ID
+from ext.consts import GENERAL_CHAT_ID, LOG_CHANNEL_ID, DEFAULT_LEVEL_IMAGE, LEVEL_PRIMARY_COLOR, LEVEL_SECONDARY_COLOR
+from utils.helper import get_xp
 
 
 class Listeners(commands.Cog):
@@ -89,54 +90,48 @@ class Listeners(commands.Cog):
             logc = self.bot.get_channel(LOG_CHANNEL_ID)
             await logc.send(embed=em)
 
-    # @commands.Cog.listener(name="on_message")
-    # async def level_cache(self, message: discord.Message):
-    #     user
-    #     res = await self.db.fetch(
-    #             "SELECT level, xp FROM level WHERE user_id = $1", user_data[0]
-    #         )
-    #         if len(res) == 0:
-    #             await self.db.execute(
-    #                 "INSERT INTO level VALUES ($1, $2, $3, $4, $5, $6)",
-    #                 user_data[0],
-    #                 user_data[1],
-    #                 1,
-    #                 "https://bit.ly/level-banner",
-    #                 "#00ffff",
-    #                 "#ffffff",
-    #             )
-    #         else:
-    #             level = res[0].get("level")
-    #             xp = res[0].get("xp")
-    #             new_xp = xp + user_data[1]
-    #             if new_xp > level * 100:
-    #                 await self.db.execute(
-    #                     "UPDATE level SET xp=0, level=level+1 WHERE user_id = $1",
-    #                     user_data[0],
-    #                 )
-    #                 general = self.bot.get_channel(809642450935218216)
-    #                 await general.send(
-    #                     embed=discord.Embed(
-    #                         description=f"<:upvote:810082923381784577> <@{user_data[0]}> You are now at **{level+1} level** GG!",
-    #                         color=discord.Color.magenta(),
-    #                     )
-    #                 )
-    #                 return
-    #             await self.db.execute(
-    #                 "UPDATE level SET xp=xp+$1 WHERE user_id = $2",
-    #                 user_data[1],
-    #                 user_data[0],
-    #             )
-    #     self.bot.level_cache = []
-
-    #     self.bot.level_cache.append((message.author.id, get_xp(message.content, 0.1)))
-    #     print(self.bot.level_cache)
+    @commands.Cog.listener(name="on_message")
+    async def level_cache(self, message: discord.Message):
+        user_data = [message.author.id, get_xp(message.content, 0.1)]
+        res = await self.db.fetch(
+                "SELECT level, xp FROM level WHERE user_id = $1", user_data[0]
+            )
+        if len(res) == 0:
+            await self.db.execute(
+                "INSERT INTO level VALUES ($1, $2, $3, $4, $5, $6)",
+                user_data[0],
+                user_data[1],
+                1,
+                DEFAULT_LEVEL_IMAGE,
+                LEVEL_PRIMARY_COLOR,
+                LEVEL_SECONDARY_COLOR,
+            )
+        else:
+            level = res[0].get("level")
+            xp = res[0].get("xp")
+            new_xp = xp + user_data[1]
+            if new_xp > level * 100:
+                await self.db.execute(
+                    "UPDATE level SET xp=0, level=level+1 WHERE user_id = $1",
+                    user_data[0],
+                )
+                await message.channel.send(
+                    embed=discord.Embed(
+                        description=f"<:upvote:810082923381784577> <@{user_data[0]}> has reached level **{level+1}**. GG!",
+                        color=discord.Color.og_blurple(),
+                    )
+                )
+                return
+            await self.db.execute(
+                "UPDATE level SET xp=xp+$1 WHERE user_id = $2",
+                user_data[1],
+                user_data[0],
+            )
 
     @commands.Cog.listener(name="on_message")
     async def autoslowmode(self, message: discord.Message):
         if message.channel.id == GENERAL_CHAT_ID:
             self.bot.msgs += 1
-
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Listeners(bot))

@@ -34,8 +34,6 @@ async def create_table(conn: asyncpg.Connection):
     print(Fore.CYAN + "setup: level")
 
 
-async def delete_table(conn: asyncpg.Connection, table: str = None):
-    if table is None:
-        return print(Fore.RED + "no table specified")
-    await conn.execute("DROP TABLE IF EXISTS $1", table)
-    print(Fore.RED + "deleted: " + table)
+async def delete_table(conn: asyncpg.Connection):
+    await conn.execute("DROP TABLE IF EXISTS level")
+    print(Fore.RED + "deleted: level")
