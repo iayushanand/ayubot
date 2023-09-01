@@ -1,14 +1,15 @@
 # ------------- import(s) ------------- #
 
-import asyncpg
-import discord
-from discord.ext import commands
 from datetime import datetime
 from time import time
 
-from ext.consts import (BAN_FORM_CHANNEL, DEFAULT_LEVEL_IMAGE, GENERAL_CHAT_ID,
-                        LEVEL_PRIMARY_COLOR, LEVEL_SECONDARY_COLOR,
-                        LOG_CHANNEL_ID, BUMPER_ROLE)
+import asyncpg
+import discord
+from discord.ext import commands
+
+from ext.consts import (BAN_FORM_CHANNEL, BUMPER_ROLE, DEFAULT_LEVEL_IMAGE,
+                        GENERAL_CHAT_ID, LEVEL_PRIMARY_COLOR,
+                        LEVEL_SECONDARY_COLOR, LOG_CHANNEL_ID)
 from ext.view import Ban_Appeal
 from utils.helper import get_xp
 
@@ -162,35 +163,38 @@ class Listeners(commands.Cog):
         # role: discord.Role = after.guild.premium_subscriber_role <- # NOTE: this will work for every server
         role = after.guild.get_role(852950166968991795)
         if role in after.roles and not role in before.roles:
-            em=discord.Embed(
-                description=f"<a:boost:983636359686279168> Thank you for boosting **{after.guild.name}**!\n\n",
-                color=discord.Color.nitro_pink()
-            ).add_field(
-                name="** **",
-                value="We are at **{}** boosts!".format(after.guild.premium_subscription_count),
-            ).add_field(
-                name="** **",
-                value="We are boost level: **{}**".format(after.guild.premium_tier),
-            ).set_thumbnail(
-                url="https://c.tenor.com/HIqZKBb8sHgAAAAi/discord-boost-yellow-boost.gif"
+            em = (
+                discord.Embed(
+                    description=f"<a:boost:983636359686279168> Thank you for boosting **{after.guild.name}**!\n\n",
+                    color=discord.Color.nitro_pink(),
+                )
+                .add_field(
+                    name="** **",
+                    value="We are at **{}** boosts!".format(
+                        after.guild.premium_subscription_count
+                    ),
+                )
+                .add_field(
+                    name="** **",
+                    value="We are boost level: **{}**".format(after.guild.premium_tier),
+                )
+                .set_thumbnail(
+                    url="https://c.tenor.com/HIqZKBb8sHgAAAAi/discord-boost-yellow-boost.gif"
+                )
             )
-            await after.guild.system_channel.send(
-                content=f"{after.mention}",
-                embed=em
-            )
-    
+            await after.guild.system_channel.send(content=f"{after.mention}", embed=em)
+
     @commands.Cog.listener(name="on_message")
     async def bump_handler(self, message: discord.Message):
-        bump_role = message.guild.get_role(
-            BUMPER_ROLE
-        )
+        bump_role = message.guild.get_role(BUMPER_ROLE)
 
-        author: discord.Member = await message.guild.fetch_member(
-                message.author.id
-            )
+        author: discord.Member = await message.guild.fetch_member(message.author.id)
 
-
-        if message.author.id == 302050872383242240 and "Bump done" in message.embeds[0].description and message.interaction:
+        if (
+            message.author.id == 302050872383242240
+            and "Bump done" in message.embeds[0].description
+            and message.interaction
+        ):
             await message.delete()
 
             user: discord.Member = await message.guild.fetch_member(
@@ -198,9 +202,7 @@ class Listeners(commands.Cog):
             )
 
             with open("bumper.txt", "w") as f:
-                f.write(
-                    f"{user.id}, {int(time()+(2*60*60))}, {message.channel.id}"
-                )
+                f.write(f"{user.id}, {int(time()+(2*60*60))}, {message.channel.id}")
 
             await user.add_roles(bump_role)
 
@@ -209,13 +211,10 @@ class Listeners(commands.Cog):
                     bump_role.mention
                 ),
                 color=discord.Color.og_blurple(),
-                timestamp=datetime.utcnow()
+                timestamp=datetime.utcnow(),
             )
 
-            await message.channel.send(
-                content=user.mention,
-                embed=embed
-            )
+            await message.channel.send(content=user.mention, embed=embed)
 
             return
 
@@ -226,6 +225,7 @@ class Listeners(commands.Cog):
                 print("Not the same user")
                 await author.remove_roles(bump_role)
                 return
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Listeners(bot))

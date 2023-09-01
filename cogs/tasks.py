@@ -99,37 +99,21 @@ class TaskCog(commands.Cog):
 
     @tasks.loop(seconds=10)
     async def send_bump_message(self):
-        with open(
-            "bumper.txt",
-            "r"
-        ) as f:
+        with open("bumper.txt", "r") as f:
             content = f.read()
-            in_list = content.split(
-                ", "
-            )
+            in_list = content.split(", ")
         try:
             if int(in_list[1]) <= int(time()):
-                channel = await self.bot.get_channel(
-                    int(
-                        in_list[2]
-                    )
-                )
+                channel = await self.bot.get_channel(int(in_list[2]))
                 await channel.send(
                     embed=discord.Embed(
-                        description="Bump Available Now.",
-                        color=discord.Color.green()
+                        description="Bump Available Now.", color=discord.Color.green()
                     )
                 )
-                with open(
-                    "bumper.txt",
-                    "w"
-                ) as f:
-                    f.write(
-                        "000"
-                    )
+                with open("bumper.txt", "w") as f:
+                    f.write("000")
         except IndexError:
             pass
-
 
 
 async def setup(bot: commands.Bot):

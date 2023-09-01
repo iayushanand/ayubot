@@ -1,15 +1,17 @@
 # -------------- import(s) ---------------
 
+import datetime as dt
+import string
+from io import BytesIO
+from typing import Tuple
+
+import aiohttp
+import discord
+from cbvx import iml
+from discord.ext import commands
 from easy_pil import Canvas, Editor
 from PIL import Image, ImageChops, ImageDraw, ImageFont
-import discord
-from discord.ext import commands
-from io import BytesIO
-from cbvx import iml
-import string
-import datetime as dt
-from typing import Tuple
-import aiohttp
+
 
 def circle(pfp, size=(110, 110)):
     pfp = pfp.resize(size, Image.ANTIALIAS).convert("RGBA")
@@ -65,7 +67,6 @@ def make_banner(av, bg, lvl, xp, req, text, color, color2):
 
 def get_xp(content: str, multiplier: float) -> float:
     return round(len(content) * multiplier, 2)
-
 
 
 # This code is directly taken and modified from The-Coding-Realm/coding-bot-v6
