@@ -1,11 +1,16 @@
+# -------- import(s) -------- #
+
 import discord
 import psutil
+
 from discord.ext import commands
 
 
-class Psutil(commands.Cog):
+
+class Owner(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
+        self.mongo = bot.mongo["codedb"]
 
     def get_cpu_usage(self):
         return psutil.cpu_percent()
@@ -69,6 +74,10 @@ class Psutil(commands.Cog):
         embed.set_thumbnail(url=self.bot.user.avatar.url)
         await ctx.reply(embed=embed)
 
+    @commands.command(name="upload-code")
+    async def upload_code(self, ctx: commands.Context, title: str, url: str):
+        await self.mongo.insert_one({"title": title, "url": url})
+        await ctx.reply("Uploaded the code on [website](<https://ayuitz.vercel.app/codes>)!")
 
-async def setup(bot):
-    await bot.add_cog(Psutil(bot))
+async def setup(bot: commands.Bot):
+    await bot.add_cog(Owner(bot))

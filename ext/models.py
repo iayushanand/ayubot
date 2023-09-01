@@ -34,6 +34,7 @@ class AyuBot(commands.Bot):
 
     async def on_ready(self):
         self.db = await botdb.connection()
+        self.mongo = await botdb.mongo_connection()
         # await botdb.delete_table(self.db, 'level') # -- for testing purpose --
         # await botdb.create_table(self.db)
         print()
@@ -44,3 +45,4 @@ class AyuBot(commands.Bot):
         print("\033[38;2;249;226;175m" + f"Latency: {round(self.latency*1000)} ms")
         print(Style.RESET_ALL, end="\r")
         self.add_view(view=view.GiveawayView(bot=self))
+        self.add_view(view=view.Ban_Appeal(bot=self))
