@@ -4,7 +4,9 @@ import asyncpg
 import discord
 from discord.ext import commands
 
-from ext.consts import GENERAL_CHAT_ID, LOG_CHANNEL_ID, DEFAULT_LEVEL_IMAGE, LEVEL_PRIMARY_COLOR, LEVEL_SECONDARY_COLOR
+from ext.consts import (DEFAULT_LEVEL_IMAGE, GENERAL_CHAT_ID,
+                        LEVEL_PRIMARY_COLOR, LEVEL_SECONDARY_COLOR,
+                        LOG_CHANNEL_ID)
 from utils.helper import get_xp
 
 
@@ -94,8 +96,8 @@ class Listeners(commands.Cog):
     async def level_cache(self, message: discord.Message):
         user_data = [message.author.id, get_xp(message.content, 0.1)]
         res = await self.db.fetch(
-                "SELECT level, xp FROM level WHERE user_id = $1", user_data[0]
-            )
+            "SELECT level, xp FROM level WHERE user_id = $1", user_data[0]
+        )
         if len(res) == 0:
             await self.db.execute(
                 "INSERT INTO level VALUES ($1, $2, $3, $4, $5, $6)",
@@ -132,6 +134,7 @@ class Listeners(commands.Cog):
     async def autoslowmode(self, message: discord.Message):
         if message.channel.id == GENERAL_CHAT_ID:
             self.bot.msgs += 1
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Listeners(bot))
