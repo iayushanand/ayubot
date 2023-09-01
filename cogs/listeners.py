@@ -4,11 +4,10 @@ import asyncpg
 import discord
 from discord.ext import commands
 
-from ext.consts import (DEFAULT_LEVEL_IMAGE, GENERAL_CHAT_ID,
+from ext.consts import (BAN_FORM_CHANNEL, DEFAULT_LEVEL_IMAGE, GENERAL_CHAT_ID,
                         LEVEL_PRIMARY_COLOR, LEVEL_SECONDARY_COLOR,
-                        LOG_CHANNEL_ID, BAN_FORM_CHANNEL)
+                        LOG_CHANNEL_ID)
 from ext.view import Ban_Appeal
-
 from utils.helper import get_xp
 
 
@@ -96,7 +95,8 @@ class Listeners(commands.Cog):
 
     @commands.Cog.listener(name="on_message")
     async def level_cache(self, message: discord.Message):
-        if message.author.bot: return
+        if message.author.bot:
+            return
         user_data = [message.author.id, get_xp(message.content, 0.1)]
         res = await self.db.fetch(
             "SELECT level, xp FROM level WHERE user_id = $1", user_data[0]
@@ -140,14 +140,21 @@ class Listeners(commands.Cog):
 
     @commands.Cog.listener(name="on_message")
     async def ban_appeal(self, message: discord.Message):
-        if not message.webhook_id == 1021724997061976074 or message.author.id == self.bot.user.id or not message.channel.id == BAN_FORM_CHANNEL:
+        if (
+            not message.webhook_id == 1021724997061976074
+            or message.author.id == self.bot.user.id
+            or not message.channel.id == BAN_FORM_CHANNEL
+        ):
             return
-        try:await message.delete()
-        except:pass #type: ignore
+        try:
+            await message.delete()
+        except:
+            pass  # type: ignore
         embed = message.embeds[0]
         user = await self.bot.fetch_user(int(embed.description))
         embed.set_author(name=str(user), icon_url=user.display_avatar.url)
         await message.channel.send(embed=embed, view=Ban_Appeal(self.bot))
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Listeners(bot))

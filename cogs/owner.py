@@ -2,9 +2,7 @@
 
 import discord
 import psutil
-
 from discord.ext import commands
-
 
 
 class Owner(commands.Cog):
@@ -77,7 +75,10 @@ class Owner(commands.Cog):
     @commands.command(name="upload-code")
     async def upload_code(self, ctx: commands.Context, title: str, url: str):
         await self.mongo.insert_one({"title": title, "url": url})
-        await ctx.reply("Uploaded the code on [website](<https://ayuitz.vercel.app/codes>)!")
+        await ctx.reply(
+            "Uploaded the code on [website](<https://ayuitz.vercel.app/codes>)!"
+        )
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Owner(bot))

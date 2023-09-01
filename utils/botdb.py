@@ -1,10 +1,9 @@
 import os
 
 import asyncpg
+import motor.motor_asyncio
 from colorama import Fore
 from dotenv import load_dotenv
-
-import motor.motor_asyncio
 
 from ext import consts
 
@@ -12,9 +11,11 @@ load_dotenv()
 
 
 async def mongo_connection():
-    cluster: motor.motor_asyncio.AsyncIOMotorClient = motor.motor_asyncio.AsyncIOMotorClient(os.getenv("mongo_uri"))
+    cluster: motor.motor_asyncio.AsyncIOMotorClient = (
+        motor.motor_asyncio.AsyncIOMotorClient(os.getenv("mongo_uri"))
+    )
     return cluster["webdb"]
-    
+
 
 async def connection() -> asyncpg.Connection:
     """
