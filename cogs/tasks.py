@@ -18,6 +18,7 @@ class TaskCog(commands.Cog):
     async def cog_load(self) -> None:
         self.set_slowmode.start()
         self.giveaway_end.start()
+        self.send_bump_message.start()
 
     @tasks.loop(minutes=1)
     async def set_slowmode(self):
@@ -95,6 +96,40 @@ class TaskCog(commands.Cog):
         return await self.db.execute(
             "DELETE FROM gaway WHERE message_id = $1", message_id
         )
+
+    @tasks.loop(seconds=10)
+    async def send_bump_message(self):
+        with open(
+            "bumper.txt",
+            "r"
+        ) as f:
+            content = f.read()
+            in_list = content.split(
+                ", "
+            )
+        try:
+            if int(in_list[1]) <= int(time()):
+                channel = await self.bot.get_channel(
+                    int(
+                        in_list[2]
+                    )
+                )
+                await channel.send(
+                    embed=discord.Embed(
+                        description="Bump Available Now.",
+                        color=discord.Color.green()
+                    )
+                )
+                with open(
+                    "bumper.txt",
+                    "w"
+                ) as f:
+                    f.write(
+                        "000"
+                    )
+        except IndexError:
+            pass
+
 
 
 async def setup(bot: commands.Bot):

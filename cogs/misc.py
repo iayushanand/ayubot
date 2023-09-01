@@ -5,7 +5,7 @@ from datetime import datetime
 import discord
 from discord import app_commands
 from discord.ext import commands
-
+from utils.helper import Spotify
 
 class Misc(commands.Cog):
     """
@@ -250,6 +250,35 @@ class Misc(commands.Cog):
             await ctx.reply(
                 embed=discord.Embed(description=f"Error: {e}", color=0xFF0000)
             )
+
+    @commands.command(aliases=["sp"])
+    @commands.cooldown(5, 60.0, type=commands.BucketType.user)
+    async def spotify(self, ctx: commands.Context, member: discord.Member = None):
+        """
+        Shows the spotify status of a member.
+
+        Usage:
+        ------
+        `{prefix}spotify`: *will show your spotify status*
+        `{prefix}spotify [member]`: *will show the spotify status of [member]*
+        """
+        member = ctx.guild.get_member((member or ctx.author).id)
+
+        spotify = Spotify(bot=self.bot, member=member)
+        result = await spotify.get_embed()
+        if not result:
+            if member == ctx.author:
+                return await ctx.reply(
+                    "You are currently not listening to spotify!", mention_author=False
+                )
+            return await self.bot.reply(
+                ctx,
+                f"{member.mention} is not listening to Spotify",
+                mention_author=False,
+                allowed_mentions=discord.AllowedMentions(users=False),
+            )
+        file, view = result
+        await ctx.send(file=file, view=view)
 
 
 async def setup(bot: commands.Bot):

@@ -3,10 +3,12 @@
 import asyncpg
 import discord
 from discord.ext import commands
+from datetime import datetime
+from time import time
 
 from ext.consts import (BAN_FORM_CHANNEL, DEFAULT_LEVEL_IMAGE, GENERAL_CHAT_ID,
                         LEVEL_PRIMARY_COLOR, LEVEL_SECONDARY_COLOR,
-                        LOG_CHANNEL_ID)
+                        LOG_CHANNEL_ID, BUMPER_ROLE)
 from ext.view import Ban_Appeal
 from utils.helper import get_xp
 
@@ -155,6 +157,75 @@ class Listeners(commands.Cog):
         embed.set_author(name=str(user), icon_url=user.display_avatar.url)
         await message.channel.send(embed=embed, view=Ban_Appeal(self.bot))
 
+    @commands.Cog.listener(name="on_member_update")
+    async def boost_message(self, before, after: discord.Member):
+        # role: discord.Role = after.guild.premium_subscriber_role <- # NOTE: this will work for every server
+        role = after.guild.get_role(852950166968991795)
+        if role in after.roles and not role in before.roles:
+            em=discord.Embed(
+                description=f"<a:boost:983636359686279168> Thank you for boosting **{after.guild.name}**!\n\n",
+                color=discord.Color.nitro_pink()
+            ).add_field(
+                name="** **",
+                value="We are at **{}** boosts!".format(after.guild.premium_subscription_count),
+            ).add_field(
+                name="** **",
+                value="We are boost level: **{}**".format(after.guild.premium_tier),
+            ).set_thumbnail(
+                url="https://c.tenor.com/HIqZKBb8sHgAAAAi/discord-boost-yellow-boost.gif"
+            )
+            await after.guild.system_channel.send(
+                content=f"{after.mention}",
+                embed=em
+            )
+    
+    @commands.Cog.listener(name="on_message")
+    async def bump_handler(self, message: discord.Message):
+        bump_role = message.guild.get_role(
+            BUMPER_ROLE
+        )
+
+        author: discord.Member = await message.guild.fetch_member(
+                message.author.id
+            )
+
+
+        if message.author.id == 302050872383242240 and "Bump done" in message.embeds[0].description and message.interaction:
+            await message.delete()
+
+            user: discord.Member = await message.guild.fetch_member(
+                message.interaction.user.id
+            )
+
+            with open("bumper.txt", "w") as f:
+                f.write(
+                    f"{user.id}, {int(time()+(2*60*60))}, {message.channel.id}"
+                )
+
+            await user.add_roles(bump_role)
+
+            embed = discord.Embed(
+                description="Bump Done!\nThanks for bumping.\nYou have been given {0} role, it will boost your message xp gain by 20% for 2 hours.".format(
+                    bump_role.mention
+                ),
+                color=discord.Color.og_blurple(),
+                timestamp=datetime.utcnow()
+            )
+
+            await message.channel.send(
+                content=user.mention,
+                embed=embed
+            )
+
+            return
+
+        if bump_role in author.roles:
+            with open("bumper.txt", "r") as f:
+                data = f.read().split(", ")
+            if not author.id == int(data[0]):
+                print("Not the same user")
+                await author.remove_roles(bump_role)
+                return
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Listeners(bot))
