@@ -1,12 +1,10 @@
 import os
-import jishaku
 
 import discord
 from colorama import Style
 from discord.ext import commands
-from dotenv import load_dotenv
 from DiscordUtils import InviteTracker
-
+from dotenv import load_dotenv
 
 from ext import consts, view
 from utils import botdb
@@ -27,7 +25,6 @@ class AyuBot(commands.Bot):
         self.tracker = InviteTracker(self)
         self.cog_list = os.listdir("./cogs")
 
-
     async def load_cogs(self):
         for cog in self.cog_list:
             if cog.endswith(".py"):
@@ -38,7 +35,6 @@ class AyuBot(commands.Bot):
                     print("\033[38;2;243;139;168m" + f"{e}")
         await self.load_extension("jishaku")
         print("\033[38;2;166;227;161m" + f"Loaded jishaku cog")
-
 
     async def on_ready(self):
         self.db = await botdb.connection()
@@ -56,7 +52,7 @@ class AyuBot(commands.Bot):
         print(Style.RESET_ALL, end="\r")
         self.add_view(view=view.GiveawayView(bot=self))
         self.add_view(view=view.Ban_Appeal(bot=self))
-    
+
     async def on_invite_create(self, invite: discord.Invite) -> None:
         await self.tracker.update_invite_cache(invite)
 

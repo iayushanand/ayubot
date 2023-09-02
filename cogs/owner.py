@@ -3,6 +3,7 @@
 import discord
 import psutil
 from discord.ext import commands
+
 from utils.helper import WelcomeBanner
 
 
@@ -80,12 +81,13 @@ class Owner(commands.Cog):
         await ctx.reply(
             "Uploaded the code on [website](<https://ayuitz.vercel.app/codes>)!"
         )
-    
+
     @commands.command("wel")
     @commands.is_owner()
     async def welcome_banner_test(self, ctx: commands.Context, member: discord.Member):
         file = await WelcomeBanner(self.bot).create_banner(member=member)
-        await ctx.reply(content=member.mention,file=file)
+        await ctx.reply(content=member.mention, file=file)
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Owner(bot))
