@@ -4,6 +4,8 @@ import datetime as dt
 import string
 from io import BytesIO
 from typing import Tuple
+import contextlib
+
 
 import aiohttp
 import discord
@@ -230,3 +232,52 @@ class Spotify:
             )
         )
         return (image, view)
+
+
+class WelcomeBanner():
+    def __init__(self, bot: commands.Bot) -> None:
+        self.bot = bot
+        self.font = {
+            48: ImageFont.truetype("asset/fonts/font.ttf", 48)
+        }
+    
+    async def create_banner(self, member: discord.Member):
+        banner = Image.open("asset/imgs/banner.png")
+        heading = f"Welcome to {member.guild.name}"
+
+        draw = ImageDraw.Draw(banner)
+        # 120, 15
+        draw.text((120, 15), heading, fill="#000000", font=self.font[48])
+        # 160, 230 image
+
+        # 320, 125 name
+        draw.text((320, 125), member.name, fill="#000000", font=self.font[48])
+
+
+        inviter = await self.bot.tracker.fetch_inviter(member)
+        invites = None
+        vanity = None
+        if inviter:
+            invites = sum(
+                i.uses
+                for i in (await member.guild.invites())
+                if i.inviter and i.inviter.id == inviter.id
+            )
+        else:
+            vanity = await member.guild.vanity_invite()
+        
+        if invites:
+            invite_message = f"Invited by: {(inviter.name[0:10]+'...') if len(inviter.name)>10 else vanity} ({invites} uses) "
+        if vanity:
+            invite_message = f"Vanity Invite: {(vanity[0:10]+'...') if len(vanity)>10 else vanity}"
+        print(invite_message)
+
+
+
+
+
+        with BytesIO() as image_binary:
+            banner.save(image_binary, "PNG")
+            image_binary.seek(0)
+            file = discord.File(fp=image_binary, filename="welcome.png")
+            return file
