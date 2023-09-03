@@ -36,8 +36,9 @@ class Warns(commands.Cog):
                     color = discord.Color.red()
                 )
             )
+        warn_count = len(res)
         embed = discord.Embed(
-            description=f"{member.mention} has {len(res)} warns",
+            description=f"{member.mention} has {str(warn_count)+' warns' if warn_count>1 else str(warn_count)+' warn'}",
             color = discord.Color.blurple()
         )
         for count, warn in enumerate(res):
@@ -45,7 +46,26 @@ class Warns(commands.Cog):
                             value=f"id: {warn.get('unique_id')}\nreason: {warn.get('reason')}\ntime: <t:{warn.get('time')}:F>\n mod: <@{warn.get('moderator')}>"
                         )
         await ctx.reply(embed=embed)
-
+    
+    @commands.command(name="clearwarn", aliases=["cw"])
+    @commands.has_permissions(manage_guild=True)
+    async def cwarn(self, ctx: commands.Context, member: discord.Member):
+        await self.db.execute("DELETE FROM warns WHERE user_id = $1", (member.id))
+        embed = discord.Embed(
+            description = f"{TICK_EMOJI} cleared warns for {member.mention}",
+            color = discord.Color.green()
+        )
+        await ctx.reply(embed=embed)
+    
+    @commands.command(name="delwarn", aliases=["dw"])
+    @commands.has_permissions(manage_guild=True)
+    async def delwarn(self, ctx: commands.Context, unique_id: int):
+        await self.db.execute("DELETE FROM warns WHERE unique_id = $1", int(unique_id))
+        embed = discord.Embed(
+            description = f"{TICK_EMOJI} deleted warn with id: `{unique_id}`",
+            color = discord.Color.green()
+        )
+        await ctx.reply(embed=embed)
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Warns(bot=bot))

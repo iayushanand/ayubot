@@ -186,9 +186,11 @@ class Listeners(commands.Cog):
 
     @commands.Cog.listener(name="on_message")
     async def bump_handler(self, message: discord.Message):
+        if message.webhook_id: return
+
         bump_role = message.guild.get_role(BUMPER_ROLE)
 
-        author: discord.Member = message.guild.get_member(message.author.id)
+        author = message.author
 
         if (
             message.author.id == 302050872383242240

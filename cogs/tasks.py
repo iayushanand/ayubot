@@ -104,7 +104,7 @@ class TaskCog(commands.Cog):
             in_list = content.split(", ")
         try:
             if int(in_list[1]) <= int(time.time()):
-                channel = await self.bot.get_channel(int(in_list[2]))
+                channel = self.bot.get_channel(int(in_list[2]))
                 await channel.send(
                     embed=discord.Embed(
                         description="Bump Available Now.", color=discord.Color.green()
