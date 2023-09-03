@@ -188,7 +188,7 @@ class Listeners(commands.Cog):
     async def bump_handler(self, message: discord.Message):
         bump_role = message.guild.get_role(BUMPER_ROLE)
 
-        author: discord.Member = await message.guild.fetch_member(message.author.id)
+        author: discord.Member = message.guild.get_member(message.author.id)
 
         if (
             message.author.id == 302050872383242240
@@ -197,7 +197,7 @@ class Listeners(commands.Cog):
         ):
             await message.delete()
 
-            user: discord.Member = await message.guild.fetch_member(
+            user: discord.Member = message.guild.get_member(
                 message.interaction.user.id
             )
 
@@ -222,7 +222,6 @@ class Listeners(commands.Cog):
             with open("bumper.txt", "r") as f:
                 data = f.read().split(", ")
             if not author.id == int(data[0]):
-                print("Not the same user")
                 await author.remove_roles(bump_role)
                 return
 

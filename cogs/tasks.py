@@ -7,7 +7,7 @@ import asyncpg
 import discord
 from discord.ext import commands, tasks
 
-from ext.consts import GENERAL_CHAT_ID
+from ext.consts import GENERAL_CHAT_ID, TICK_EMOJI
 
 
 class TaskCog(commands.Cog):
@@ -27,7 +27,7 @@ class TaskCog(commands.Cog):
             await channel.edit(slowmode_delay=2)
             await channel.send(
                 embed=discord.Embed(
-                    description=f"<:tick:966707201064464395> Slowmode set for **2s** because chat is fast!",
+                    description=f"{TICK_EMOJI} Slowmode set for **2s** because chat is fast!",
                     color=discord.Color.green(),
                 )
             )
@@ -35,7 +35,7 @@ class TaskCog(commands.Cog):
             await channel.edit(slowmode_delay=0)
             await channel.send(
                 embed=discord.Embed(
-                    description=f"<:tick:966707201064464395> Slowmode set for **0s** because chat is fast!",
+                    description=f"{TICK_EMOJI} Slowmode set for **0s** because chat is fast!",
                     color=discord.Color.green(),
                 )
             )
@@ -103,7 +103,7 @@ class TaskCog(commands.Cog):
             content = f.read()
             in_list = content.split(", ")
         try:
-            if int(in_list[1]) <= int(time()):
+            if int(in_list[1]) <= int(time.time()):
                 channel = await self.bot.get_channel(int(in_list[2]))
                 await channel.send(
                     embed=discord.Embed(

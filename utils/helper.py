@@ -12,6 +12,7 @@ from discord.ext import commands
 from easy_pil import Canvas, Editor
 from PIL import Image, ImageChops, ImageDraw, ImageFont
 
+import random
 
 def circle(pfp, size=(110, 110)):
     pfp = pfp.resize(size, Image.ANTIALIAS).convert("RGBA")
@@ -274,3 +275,12 @@ class WelcomeBanner:
             image_binary.seek(0)
             file = discord.File(fp=image_binary, filename="welcome.png")
             return file
+
+async def generate_id(db, table):
+    _id = random.randint(100000, 999999)
+    while True:
+        res = await db.fetch(f"SELECT unique_id FROM {table} WHERE unique_id = $1", _id)
+        if not len(res)>0:
+            break
+        _id = random.randint(100000, 999999)
+    return _id

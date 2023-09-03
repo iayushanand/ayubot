@@ -7,7 +7,7 @@ from discord import app_commands
 from discord.ext import commands
 
 from utils.helper import Spotify
-
+from ext import consts
 
 class Misc(commands.Cog):
     """
@@ -32,7 +32,7 @@ class Misc(commands.Cog):
         await ctx.channel.edit(slowmode_delay=time)
         await ctx.reply(
             embed=discord.Embed(
-                description=f"<:tick:966707201064464395> Slowmode set for **{time}s**",
+                description=f"{consts.TICK_EMOJI} Slowmode set for **{time}s**",
                 color=discord.Color.green(),
             )
         )

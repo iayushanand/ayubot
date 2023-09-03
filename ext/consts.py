@@ -47,6 +47,16 @@ CREATE TABLE IF NOT EXISTS level (
     )
 """
 
+WARNING_CONFIG_SCHEMA = """
+CREATE TABLE IF NOT EXISTS warns (
+        unique_id BIGINT,
+        user_id BIGINT,
+        reason TEXT,
+        time BIGINT,
+        moderator BIGINT
+    )
+"""
+
 # ----------------------- config ---------------------- #
 
 GENERAL_CHAT_ID = 809642450935218216
@@ -64,3 +74,5 @@ LEVEL_SECONDARY_COLOR = "#9b9a9c"
 BAN_FORM_CHANNEL = 1019616803804151921
 
 BUMPER_ROLE = 1147265527778128042
+
+TICK_EMOJI = "<:tick:966707201064464395>"

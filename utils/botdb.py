@@ -40,10 +40,12 @@ async def create_table(conn: asyncpg.Connection):
     print(Fore.CYAN + "setup: gaway")
     await conn.execute(consts.LEVELLING_CONFIG_SCHEMA)
     print(Fore.CYAN + "setup: level")
+    await conn.execute(consts.WARNING_CONFIG_SCHEMA)
+    print(Fore.CYAN + "setup: warns")
 
 
 async def delete_table(conn: asyncpg.Connection, table: str = None):
     if table is None:
         return print(Fore.RED + "no table specified")
-    await conn.execute("DROP TABLE IF EXISTS $1", table)
+    await conn.execute(f"DROP TABLE IF EXISTS {table}")
     print(Fore.RED + "deleted: " + table)
