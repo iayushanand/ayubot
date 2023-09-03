@@ -246,6 +246,7 @@ class WelcomeBanner:
         # 120, 15
         draw.text((120, 15), heading, fill="#000000", font=self.font[48])
         # 160, 230 image
+        
 
         # 320, 125 name
         draw.text((320, 125), member.name, fill="#000000", font=self.font[48])
@@ -260,7 +261,9 @@ class WelcomeBanner:
                 if i.inviter and i.inviter.id == inviter.id
             )
         else:
-            vanity = await member.guild.vanity_invite()
+            try:
+                vanity = await member.guild.vanity_invite()
+            except: vanity = "unknown"
 
         if invites:
             invite_message = f"Invited by: {(inviter.name[0:10]+'...') if len(inviter.name)>10 else vanity} ({invites} uses) "
