@@ -186,7 +186,8 @@ class Listeners(commands.Cog):
 
     @commands.Cog.listener(name="on_message")
     async def bump_handler(self, message: discord.Message):
-        if message.webhook_id: return
+        if message.webhook_id:
+            return
 
         bump_role = message.guild.get_role(BUMPER_ROLE)
 
@@ -199,9 +200,7 @@ class Listeners(commands.Cog):
         ):
             await message.delete()
 
-            user: discord.Member = message.guild.get_member(
-                message.interaction.user.id
-            )
+            user: discord.Member = message.guild.get_member(message.interaction.user.id)
 
             with open("bumper.txt", "w") as f:
                 f.write(f"{user.id}, {int(time()+(2*60*60))}, {message.channel.id}")

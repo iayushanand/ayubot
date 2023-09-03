@@ -4,6 +4,7 @@ from discord import Color, Embed
 # import config
 from discord.ext import commands
 
+
 class CodeExec(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -21,7 +22,7 @@ class CodeExec(commands.Cog):
         return await res.json()
 
     @commands.command()
-    async def run(self, ctx: commands.Context, *, codeblock = None):
+    async def run(self, ctx: commands.Context, *, codeblock=None):
         """
         Run code and get results instantly
         **Note**: You must use codeblocks around the code

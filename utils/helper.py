@@ -1,6 +1,7 @@
 # -------------- import(s) ---------------
 
 import datetime as dt
+import random
 import string
 from io import BytesIO
 from typing import Tuple
@@ -12,7 +13,6 @@ from discord.ext import commands
 from easy_pil import Canvas, Editor
 from PIL import Image, ImageChops, ImageDraw, ImageFont
 
-import random
 
 def circle(pfp, size=(110, 110)):
     pfp = pfp.resize(size, Image.ANTIALIAS).convert("RGBA")
@@ -246,7 +246,6 @@ class WelcomeBanner:
         # 120, 15
         draw.text((120, 15), heading, fill="#000000", font=self.font[48])
         # 160, 230 image
-        
 
         # 320, 125 name
         draw.text((320, 125), member.name, fill="#000000", font=self.font[48])
@@ -263,7 +262,8 @@ class WelcomeBanner:
         else:
             try:
                 vanity = await member.guild.vanity_invite()
-            except: vanity = "unknown"
+            except:
+                vanity = "unknown"
 
         if invites:
             invite_message = f"Invited by: {(inviter.name[0:10]+'...') if len(inviter.name)>10 else vanity} ({invites} uses) "
@@ -279,11 +279,12 @@ class WelcomeBanner:
             file = discord.File(fp=image_binary, filename="welcome.png")
             return file
 
+
 async def generate_id(db, table):
     _id = random.randint(100000, 999999)
     while True:
         res = await db.fetch(f"SELECT unique_id FROM {table} WHERE unique_id = $1", _id)
-        if not len(res)>0:
+        if not len(res) > 0:
             break
         _id = random.randint(100000, 999999)
     return _id

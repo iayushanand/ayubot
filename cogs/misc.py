@@ -6,8 +6,9 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from utils.helper import Spotify
 from ext import consts
+from utils.helper import Spotify
+
 
 class Misc(commands.Cog):
     """
