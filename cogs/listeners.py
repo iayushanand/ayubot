@@ -186,9 +186,6 @@ class Listeners(commands.Cog):
 
     @commands.Cog.listener(name="on_message")
     async def bump_handler(self, message: discord.Message):
-        if message.webhook_id:
-            return
-
         bump_role = message.guild.get_role(BUMPER_ROLE)
 
         author = message.author
@@ -218,7 +215,8 @@ class Listeners(commands.Cog):
             await message.channel.send(content=user.mention, embed=embed)
 
             return
-
+        if message.author.bot:
+            return
         if bump_role in author.roles:
             with open("bumper.txt", "r") as f:
                 data = f.read().split(", ")
