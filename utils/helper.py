@@ -246,7 +246,7 @@ class WelcomeBanner:
         # 120, 15
         draw.text((120, 15), heading, fill="#000000", font=self.font[48])
         # 160, 230 image
-
+        
         # 320, 125 name
         draw.text((320, 125), member.name, fill="#000000", font=self.font[48])
 
