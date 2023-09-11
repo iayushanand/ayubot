@@ -1,11 +1,13 @@
 # -------- import(s) -------- #
 
+import sys
+
 import discord
 import psutil
 from discord.ext import commands
 
 from utils.helper import WelcomeBanner
-import sys
+
 
 class Owner(commands.Cog):
     def __init__(self, bot: commands.Bot):
