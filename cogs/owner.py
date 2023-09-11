@@ -5,7 +5,7 @@ import psutil
 from discord.ext import commands
 
 from utils.helper import WelcomeBanner
-
+import sys
 
 class Owner(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -32,10 +32,10 @@ class Owner(commands.Cog):
         return psutil.disk_usage("/").percent
 
     def get_python_version(self):
-        return "3.10.0"
+        return sys.version
 
     def get_discord_version(self):
-        return "2.0.0b7"
+        return discord.__version__
 
     @commands.command(name="botstats", help="Get bot stats")
     @commands.has_permissions(administrator=True)
