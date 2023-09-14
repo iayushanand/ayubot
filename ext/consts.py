@@ -57,6 +57,15 @@ CREATE TABLE IF NOT EXISTS warns (
     )
 """
 
+TODO_CONFIG_SCHEMA = """
+CREATE TABLE IF NOT EXISTS todo (
+        unique_id BIGINT,
+        user_id BIGINT,
+        time BIGINT,
+        task TEXT
+)
+"""
+
 # ----------------------- config ---------------------- #
 
 GENERAL_CHAT_ID = 809642450935218216
