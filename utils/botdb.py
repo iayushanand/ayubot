@@ -44,6 +44,8 @@ async def create_table(conn: asyncpg.Connection):
     print(Fore.CYAN + "setup: warns")
     await conn.execute(consts.TODO_CONFIG_SCHEMA)
     print(Fore.CYAN + "setup: todo")
+    await conn.execute(consts.REMINDER_CONFIG_SCHEMA)
+    print(Fore.CYAN + "setup: reminder")
 
 
 async def delete_table(conn: asyncpg.Connection, table: str = None):

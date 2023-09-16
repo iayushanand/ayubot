@@ -1,5 +1,6 @@
 # ------------- import(s) ------------- #
 
+import asyncio
 from datetime import datetime
 from time import time
 
@@ -9,7 +10,7 @@ from discord.ext import commands
 
 from ext.consts import (BAN_FORM_CHANNEL, BUMPER_ROLE, DEFAULT_LEVEL_IMAGE,
                         GENERAL_CHAT_ID, LEVEL_PRIMARY_COLOR,
-                        LEVEL_SECONDARY_COLOR, LOG_CHANNEL_ID)
+                        LEVEL_SECONDARY_COLOR, LOG_CHANNEL_ID, GUILD_BOOST_ROLE)
 from ext.view import Ban_Appeal
 from utils.helper import get_xp
 
@@ -161,7 +162,7 @@ class Listeners(commands.Cog):
     @commands.Cog.listener(name="on_member_update")
     async def boost_message(self, before, after: discord.Member):
         # role: discord.Role = after.guild.premium_subscriber_role <- # NOTE: this will work for every server
-        role = after.guild.get_role(852950166968991795)
+        role = after.guild.get_role(GUILD_BOOST_ROLE)
         if role in after.roles and not role in before.roles:
             em = (
                 discord.Embed(
@@ -196,7 +197,7 @@ class Listeners(commands.Cog):
             and message.interaction
         ):
             await message.delete()
-
+            await asyncio.sleep(0.5)
             user: discord.Member = message.guild.get_member(message.interaction.user.id)
 
             with open("bumper.txt", "w") as f:

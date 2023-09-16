@@ -52,7 +52,7 @@ class Todo(commands.Cog):
         await ctx.reply(embed=embed)
 
     @todo.command(name="add")
-    async def todo_add(self, ctx: commands.Context, todo: str):
+    async def todo_add(self, ctx: commands.Context, *, todo: str):
         unique_id = await generate_id(self.db, "todo")
         user_id = ctx.author.id
         _t = int(time.time())

@@ -20,7 +20,7 @@ class AyuBot(commands.Bot):
             case_insensitive=True,
             status=consts.BOT_STATUS,
             activity=consts.BOT_ACTIVITY,
-            guild=discord.Object(os.getenv("guild_id")),
+            guild=discord.Object(consts.GUILD_ID),
         )
         self.tracker = InviteTracker(self)
         self.cog_list = os.listdir("./cogs")

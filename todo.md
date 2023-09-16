@@ -1,7 +1,7 @@
 # TODO LIST FOR THE DISCORD BOT
 
 
-- [ ] Make a todo command
+- [x] Make a todo command
 
 - [ ] Add reminder command
 

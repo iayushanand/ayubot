@@ -1,7 +1,6 @@
 import re
 
 from discord import Color, Embed
-# import config
 from discord.ext import commands
 
 
@@ -27,12 +26,12 @@ class CodeExec(commands.Cog):
         Run code and get results instantly
         **Note**: You must use codeblocks around the code
         """
-        # if (not codeblock) and (ctx.message.reference):
-        #     codeblock = ctx.fetch_message(ctx.message.reference.message_id)
-        # else:
-        #     return await ctx.reply(
-        #         embed=Embed(title="Uh-oh", description="Can't find your code :(")
-        #     )
+        if (not codeblock) and (ctx.message.reference):
+            codeblock = ctx.fetch_message(ctx.message.reference.message_id)
+        else:
+            return await ctx.reply(
+                embed=Embed(title="Uh-oh", description="Can't find your code :(")
+            )
         matches = self.regex.findall(codeblock)
         if not matches:
             return await ctx.reply(
@@ -67,9 +66,6 @@ class CodeExec(commands.Cog):
                 )
             )
         output = result["output"]
-        #        if len(output) > 2000:
-        #            url = await create_guest_paste_bin(self.session, output)
-        #            return await ctx.reply("Your output was too long, so here's the pastebin link " + url)
         embed = Embed(title=f"Ran your {result['language']} code", color=Color.purple())
         output = output[:500].strip()
         shortened = len(output) > 500
