@@ -3,7 +3,7 @@
 
 - [x] Make a todo command
 
-- [ ] Add reminder command
+- [x] Add reminder command
 
 - [ ] work on welcome embed
 
