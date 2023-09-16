@@ -9,8 +9,8 @@ import discord
 from discord.ext import commands
 
 from ext.consts import (BAN_FORM_CHANNEL, BUMPER_ROLE, DEFAULT_LEVEL_IMAGE,
-                        GENERAL_CHAT_ID, LEVEL_PRIMARY_COLOR,
-                        LEVEL_SECONDARY_COLOR, LOG_CHANNEL_ID, GUILD_BOOST_ROLE)
+                        GENERAL_CHAT_ID, GUILD_BOOST_ROLE, LEVEL_PRIMARY_COLOR,
+                        LEVEL_SECONDARY_COLOR, LOG_CHANNEL_ID)
 from ext.view import Ban_Appeal
 from utils.helper import get_xp
 
