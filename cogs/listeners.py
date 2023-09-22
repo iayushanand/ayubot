@@ -41,7 +41,8 @@ class Listeners(commands.Cog):
                 embed=discord.Embed(
                     description=f"Welcome back {message.author.mention}! I removed your AFK status.",
                     color=discord.Color.blurple(),
-                )
+                ),
+                delete_after=5
             )
             try:
                 await message.author.edit(nick=message.author.display_name[5:])
