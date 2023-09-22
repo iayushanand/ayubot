@@ -37,8 +37,10 @@ class Listeners(commands.Cog):
             await self.db.execute(
                 "DELETE FROM afk WHERE user_id = $1", message.author.id
             )
-            await message.reply(
-                f"Welcome back {message.author.mention}! I removed your AFK status."
+            await message.reply(embed=discord.Embed(
+                description=f"Welcome back {message.author.mention}! I removed your AFK status.",
+                color = discord.Color.blurple()
+                )
             )
             try:
                 await message.author.edit(nick=message.author.display_name[5:])
