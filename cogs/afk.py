@@ -27,10 +27,11 @@ class AFK(commands.Cog):
             await ctx.author.edit(nick=f"[AFK] {ctx.author.display_name}")
         except discord.Forbidden:
             pass  # type: ignore
-        await ctx.reply(embed = discord.Embed(
-            description = "I set your AFK! " + reason,
-            color = discord.Color.green()
-        ))
+        await ctx.reply(
+            embed=discord.Embed(
+                description="I set your AFK! " + reason, color=discord.Color.green()
+            )
+        )
 
 
 async def setup(bot: commands.Bot):

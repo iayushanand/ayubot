@@ -37,9 +37,10 @@ class Listeners(commands.Cog):
             await self.db.execute(
                 "DELETE FROM afk WHERE user_id = $1", message.author.id
             )
-            await message.reply(embed=discord.Embed(
-                description=f"Welcome back {message.author.mention}! I removed your AFK status.",
-                color = discord.Color.blurple()
+            await message.reply(
+                embed=discord.Embed(
+                    description=f"Welcome back {message.author.mention}! I removed your AFK status.",
+                    color=discord.Color.blurple(),
                 )
             )
             try:
@@ -106,7 +107,13 @@ class Listeners(commands.Cog):
             return
         bumper_role = message.guild.get_role(BUMPER_ROLE)
         booster = message.guild.get_role(GUILD_BOOST_ROLE)
-        xp = 0.3 if booster in message.author.roles else 0.2 if bumper_role in message.author.roles else 0.1
+        xp = (
+            0.3
+            if booster in message.author.roles
+            else 0.2
+            if bumper_role in message.author.roles
+            else 0.1
+        )
         user_data = [message.author.id, get_xp(message.content, xp)]
         res = await self.db.fetch(
             "SELECT level, xp FROM level WHERE user_id = $1", user_data[0]
