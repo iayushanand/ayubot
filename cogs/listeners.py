@@ -102,7 +102,10 @@ class Listeners(commands.Cog):
     async def level_cache(self, message: discord.Message):
         if message.author.bot:
             return
-        user_data = [message.author.id, get_xp(message.content, 0.1)]
+        bumper_role = message.guild.get_role(BUMPER_ROLE)
+        booster = message.guild.get_role(GUILD_BOOST_ROLE)
+        xp = 0.3 if booster in message.author.roles else 0.2 if bumper_role in message.author.roles else 0.1
+        user_data = [message.author.id, get_xp(message.content, xp)]
         res = await self.db.fetch(
             "SELECT level, xp FROM level WHERE user_id = $1", user_data[0]
         )
@@ -207,7 +210,7 @@ class Listeners(commands.Cog):
             await user.add_roles(bump_role)
 
             embed = discord.Embed(
-                description="Bump Done!\nThanks for bumping.\nYou have been given {0} role, it will boost your message xp gain by 20% for 2 hours.".format(
+                description="Bump Done!\nThanks for bumping.\nYou have been given {0} role, it will boost your message xp gain by 200% for 2 hours.".format(
                     bump_role.mention
                 ),
                 color=discord.Color.og_blurple(),
