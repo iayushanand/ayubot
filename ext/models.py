@@ -3,7 +3,6 @@ import os
 import discord
 from colorama import Style
 from discord.ext import commands
-from DiscordUtils import InviteTracker
 from dotenv import load_dotenv
 
 from ext import consts, view
@@ -23,8 +22,7 @@ class AyuBot(commands.Bot):
             guild=discord.Object(consts.GUILD_ID),
         )
         self.cog_list = os.listdir("./cogs")
-        os.environ['JISHAKU_NO_UNDERSCORE'] = 'True'
-
+        os.environ["JISHAKU_NO_UNDERSCORE"] = "True"
 
     async def load_cogs(self):
         for cog in self.cog_list:

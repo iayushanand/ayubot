@@ -10,11 +10,11 @@ from discord.ext import commands
 
 from ext.consts import (BAN_FORM_CHANNEL, BUMPER_ROLE, DEFAULT_LEVEL_IMAGE,
                         GENERAL_CHAT_ID, GUILD_BOOST_ROLE, LEVEL_PRIMARY_COLOR,
-                        LEVEL_SECONDARY_COLOR, LOG_CHANNEL_ID, WELCOME_CHANNEL_ID)
+                        LEVEL_SECONDARY_COLOR, LOG_CHANNEL_ID,
+                        WELCOME_CHANNEL_ID)
 from ext.view import Ban_Appeal
-from utils.helper import get_xp, WelcomeBanner
+from utils.helper import WelcomeBanner, get_xp
 
-from DiscordUtils import InviteTracker
 
 class Listeners(commands.Cog):
     """
@@ -231,6 +231,7 @@ class Listeners(commands.Cog):
         banner = await WelcomeBanner(self.bot).create_banner(member=member)
         channel = self.bot.get_channel(WELCOME_CHANNEL_ID)
         await channel.send(file=banner)
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Listeners(bot))

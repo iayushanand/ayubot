@@ -3,15 +3,14 @@
 import datetime as dt
 import random
 import string
-
-import humanize
+import time
 from io import BytesIO
 from typing import Tuple
 
-import aiohttp, time
+import aiohttp
 import discord
+import humanize
 from cbvx import iml
-
 from discord.ext import commands
 from easy_pil import Canvas, Editor
 from PIL import Image, ImageChops, ImageDraw, ImageFont
@@ -239,22 +238,19 @@ class Spotify:
 class WelcomeBanner:
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
-        self.font = {   50: ImageFont.truetype("asset/fonts/font.ttf", 50),
-                        40: ImageFont.truetype("asset/fonts/font.ttf", 40),
-                        30: ImageFont.truetype("asset/fonts/font.ttf", 30)
-                    }
-        self.color = {  "black": "#000000",
-                        "white": "#ffffff",
-                        "purple": "#c6a6ff"
-                    }
-    
-    def circle(self, pfp,size = (250,250)):
-        
+        self.font = {
+            50: ImageFont.truetype("asset/fonts/font.ttf", 50),
+            40: ImageFont.truetype("asset/fonts/font.ttf", 40),
+            30: ImageFont.truetype("asset/fonts/font.ttf", 30),
+        }
+        self.color = {"black": "#000000", "white": "#ffffff", "purple": "#c6a6ff"}
+
+    def circle(self, pfp, size=(250, 250)):
         pfp = pfp.resize(size).convert("RGBA")
-        
+
         bigsize = (pfp.size[0] * 3, pfp.size[1] * 3)
-        mask = Image.new('L', bigsize, 0)
-        draw = ImageDraw.Draw(mask) 
+        mask = Image.new("L", bigsize, 0)
+        draw = ImageDraw.Draw(mask)
         draw.ellipse((0, 0) + bigsize, fill=255)
         mask = mask.resize(pfp.size)
         mask = ImageChops.darker(mask, pfp.split()[-1])
@@ -263,7 +259,9 @@ class WelcomeBanner:
 
     async def create_banner(self, member: discord.Member) -> discord.File:
         inviter = None
-        async for entry in member.guild.audit_logs(action=discord.AuditLogAction.invite_create, limit=1):
+        async for entry in member.guild.audit_logs(
+            action=discord.AuditLogAction.invite_create, limit=1
+        ):
             inviter = entry.user
         inv = None
         if inviter:
@@ -272,26 +270,25 @@ class WelcomeBanner:
                 for i in (await member.guild.invites())
                 if i.inviter and i.inviter.id == inviter.id
             )
-        
-        
+
         heading = f"Welcome to {member.guild.name}"
         banner = Image.open("asset/imgs/banner.png")
         inv_message = f"Invited by: {inviter.name if inviter else 'unknown'} {f'({inv if inv else 0} uses)'}"
-        acc_created=f"Acc Created: {humanize.naturaldelta(dt.timedelta(seconds=int(time.time()-member.created_at.timestamp())))} ago"
+        acc_created = f"Acc Created: {humanize.naturaldelta(dt.timedelta(seconds=int(time.time()-member.created_at.timestamp())))} ago"
         data = Image.open(BytesIO(await member.display_avatar.read()))
-        pfp=self.circle(data)
-
+        pfp = self.circle(data)
 
         draw = ImageDraw.Draw(banner)
 
         draw.text((120, 15), heading, fill=self.color["black"], font=self.font[50])
         draw.text((320, 125), member.name, fill=self.color["black"], font=self.font[50])
-        draw.text((320, 180), f"({member.id})", fill=self.color["black"], font=self.font[30])
+        draw.text(
+            (320, 180), f"({member.id})", fill=self.color["black"], font=self.font[30]
+        )
         draw.text((320, 250), inv_message, fill=self.color["black"], font=self.font[40])
         draw.text((320, 300), acc_created, fill=self.color["black"], font=self.font[40])
 
         banner.paste(pfp, (40, 100), pfp)
-
 
         with BytesIO() as image_binary:
             banner.save(image_binary, "PNG")
