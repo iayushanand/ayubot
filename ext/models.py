@@ -22,8 +22,9 @@ class AyuBot(commands.Bot):
             activity=consts.BOT_ACTIVITY,
             guild=discord.Object(consts.GUILD_ID),
         )
-        self.tracker = InviteTracker(self)
         self.cog_list = os.listdir("./cogs")
+        os.environ['JISHAKU_NO_UNDERSCORE'] = 'True'
+
 
     async def load_cogs(self):
         for cog in self.cog_list:
@@ -39,7 +40,6 @@ class AyuBot(commands.Bot):
     async def on_ready(self):
         self.db = await botdb.connection()
         self.mongo = await botdb.mongo_connection()
-        await self.tracker.cache_invites()
 
         # await botdb.delete_table(self.db, 'level') # -- for testing purpose --
         # await botdb.create_table(self.db)
@@ -52,9 +52,3 @@ class AyuBot(commands.Bot):
         print(Style.RESET_ALL, end="\r")
         self.add_view(view=view.GiveawayView(bot=self))
         self.add_view(view=view.Ban_Appeal(bot=self))
-
-    async def on_invite_create(self, invite: discord.Invite) -> None:
-        await self.tracker.update_invite_cache(invite)
-
-    async def on_invite_delete(self, invite: discord.Invite) -> None:
-        await self.tracker.remove_invite_cache(invite)
