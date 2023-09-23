@@ -10,11 +10,11 @@ from typing import Tuple
 import aiohttp
 import discord
 import humanize
+from captcha.image import ImageCaptcha
 from cbvx import iml
 from discord.ext import commands
 from easy_pil import Canvas, Editor
 from PIL import Image, ImageChops, ImageDraw, ImageFont
-from captcha.image import ImageCaptcha
 
 
 def circle(pfp, size=(110, 110)):
@@ -298,16 +298,15 @@ class WelcomeBanner:
             return file
 
 
-class Verification():
+class Verification:
     def __init__(self) -> None:
-        self.string = str(random.randint(10000,99999))
-    
+        self.string = str(random.randint(10000, 99999))
+
     def get_image(self) -> [str, discord.File]:
         text = self.string
-        image = ImageCaptcha(width = 280, height = 90)
+        image = ImageCaptcha(width=280, height=90)
         data = image.generate(text)
         return text, discord.File(fp=data, filename="verification.png")
-
 
 
 async def generate_id(db, table):

@@ -1,11 +1,14 @@
-from typing import Optional
+import asyncio
+
 import asyncpg
 import discord
 from discord.ext import commands
 from discord.ui import Button, View, button
+
+from ext.consts import (TICK_EMOJI, VERIFICATION_BUTTON_EMOJI,
+                        VERIFICATION_MESSAGE_EMOJI, VERIFICATION_ROLE_ID)
 from utils.helper import Verification
-from ext.consts import TICK_EMOJI, VERIFICATION_ROLE_ID, VERIFICATION_BUTTON_EMOJI, VERIFICATION_MESSAGE_EMOJI
-import asyncio
+
 
 class GiveawayView(View):
     def __init__(self, bot: commands.Bot):
@@ -168,29 +171,89 @@ class VerificationView(discord.ui.View):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         super().__init__(timeout=None)
-    
-    @button(label="Verify", style=discord.ButtonStyle.blurple, custom_id="verificationbutton", emoji=VERIFICATION_BUTTON_EMOJI)
+
+    @button(
+        label="Verify",
+        style=discord.ButtonStyle.blurple,
+        custom_id="verificationbutton",
+        emoji=VERIFICATION_BUTTON_EMOJI,
+    )
     async def verify(self, interaction: discord.Interaction, button: discord.Button):
         try:
             text, image = Verification().get_image()
-            dm_msg = await interaction.user.send(content=VERIFICATION_MESSAGE_EMOJI+" Enter Captcha: ", file=image)
-            await interaction.response.send_message(embed = discord.Embed(description=TICK_EMOJI+"Check your dms!",color=discord.Color.blurple()),ephemeral=True)
+            dm_msg = await interaction.user.send(
+                content=VERIFICATION_MESSAGE_EMOJI + " Enter Captcha: ", file=image
+            )
+            await interaction.response.send_message(
+                embed=discord.Embed(
+                    description=TICK_EMOJI + "Check your dms!",
+                    color=discord.Color.blurple(),
+                ),
+                ephemeral=True,
+            )
         except discord.Forbidden:
-            await interaction.response.send_message(embed=discord.Embed(description=":x: Please turn on your dms!",color=discord.Color.red()),ephemeral=True)
+            await interaction.response.send_message(
+                embed=discord.Embed(
+                    description=":x: Please turn on your dms!",
+                    color=discord.Color.red(),
+                ),
+                ephemeral=True,
+            )
             return
 
         try:
-            msg = await self.bot.wait_for("message", check=lambda m: interaction.user == m.author and not m.guild, timeout=30)
+            msg = await self.bot.wait_for(
+                "message",
+                check=lambda m: interaction.user == m.author and not m.guild,
+                timeout=30,
+            )
 
         except asyncio.TimeoutError:
-            await interaction.user.send(embed=discord.Embed(description=":x: Timeout! Please try again.",color = discord.Color.red()), delete_after=5)
-            await dm_msg.edit(content=None, attachments=[], embed=discord.Embed(description=":x: Verification Failed!", color=discord.Color.red()))
+            await interaction.user.send(
+                embed=discord.Embed(
+                    description=":x: Timeout! Please try again.",
+                    color=discord.Color.red(),
+                ),
+                delete_after=5,
+            )
+            await dm_msg.edit(
+                content=None,
+                attachments=[],
+                embed=discord.Embed(
+                    description=":x: Verification Failed!", color=discord.Color.red()
+                ),
+            )
         else:
             if msg.content.lower() == text.lower():
                 role = interaction.guild.get_role(VERIFICATION_ROLE_ID)
                 await interaction.user.add_roles(role)
-                await interaction.user.send(embed=discord.Embed(description=TICK_EMOJI+"You're verified!", color=discord.Color.green()), delete_after=5)
-                await dm_msg.edit(content=None, attachments=[], embed=discord.Embed(description=TICK_EMOJI+"Verification Success!", color=discord.Color.green()))
+                await interaction.user.send(
+                    embed=discord.Embed(
+                        description=TICK_EMOJI + "You're verified!",
+                        color=discord.Color.green(),
+                    ),
+                    delete_after=5,
+                )
+                await dm_msg.edit(
+                    content=None,
+                    attachments=[],
+                    embed=discord.Embed(
+                        description=TICK_EMOJI + "Verification Success!",
+                        color=discord.Color.green(),
+                    ),
+                )
             else:
-                await interaction.user.send(embed=discord.Embed(color=discord.Color.red(), description=":x: Invalid Captcha!"), delete_after=5)
-                await dm_msg.edit(content=None, attachments=[], embed=discord.Embed(description=":x: Verification Failed!", color=discord.Color.red()))
+                await interaction.user.send(
+                    embed=discord.Embed(
+                        color=discord.Color.red(), description=":x: Invalid Captcha!"
+                    ),
+                    delete_after=5,
+                )
+                await dm_msg.edit(
+                    content=None,
+                    attachments=[],
+                    embed=discord.Embed(
+                        description=":x: Verification Failed!",
+                        color=discord.Color.red(),
+                    ),
+                )
