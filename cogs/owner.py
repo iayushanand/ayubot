@@ -88,7 +88,8 @@ class Owner(commands.Cog):
     @commands.is_owner()
     async def verify_button(self, ctx: commands.Context):
         await ctx.send(
-            content="# Click the button below to verify!", view=VerificationView(self.bot)
+            content="# Click the button below to verify!",
+            view=VerificationView(self.bot),
         )
 
 
