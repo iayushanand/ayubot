@@ -50,3 +50,4 @@ class AyuBot(commands.Bot):
         print(Style.RESET_ALL, end="\r")
         self.add_view(view=view.GiveawayView(bot=self))
         self.add_view(view=view.Ban_Appeal(bot=self))
+        self.add_view(view=view.VerificationView(bot=self))

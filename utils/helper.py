@@ -14,6 +14,7 @@ from cbvx import iml
 from discord.ext import commands
 from easy_pil import Canvas, Editor
 from PIL import Image, ImageChops, ImageDraw, ImageFont
+from captcha.image import ImageCaptcha
 
 
 def circle(pfp, size=(110, 110)):
@@ -274,7 +275,7 @@ class WelcomeBanner:
         heading = f"Welcome to {member.guild.name}"
         banner = Image.open("asset/imgs/banner.png")
         inv_message = f"Invited by: {inviter.name if inviter else 'unknown'} {f'({inv if inv else 0} uses)'}"
-        acc_created = f"Acc Created: {humanize.naturaldelta(dt.timedelta(seconds=int(time.time()-member.created_at.timestamp())))} ago"
+        acc_created = f"Created: {humanize.naturaldelta(dt.timedelta(seconds=int(time.time()-member.created_at.timestamp())))} ago"
         data = Image.open(BytesIO(await member.display_avatar.read()))
         pfp = self.circle(data)
 
@@ -295,6 +296,18 @@ class WelcomeBanner:
             image_binary.seek(0)
             file = discord.File(fp=image_binary, filename="welcome.png")
             return file
+
+
+class Verification():
+    def __init__(self) -> None:
+        self.string = str(random.randint(10000,99999))
+    
+    def get_image(self) -> [str, discord.File]:
+        text = self.string
+        image = ImageCaptcha(width = 280, height = 90)
+        data = image.generate(text)
+        return text, discord.File(fp=data, filename="verification.png")
+
 
 
 async def generate_id(db, table):

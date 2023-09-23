@@ -5,7 +5,8 @@ import sys
 import discord
 import psutil
 from discord.ext import commands
-
+from utils.helper import Verification
+from ext.view import VerificationView
 
 class Owner(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -81,6 +82,12 @@ class Owner(commands.Cog):
         await ctx.reply(
             "Uploaded the code on [website](<https://ayuitz.vercel.app/codes>)!"
         )
+
+    @commands.command(name="verification-button")
+    @commands.is_owner()
+    async def verify_button(self, ctx: commands.Context):
+        await ctx.send(content="# Click button below to verify!",view=VerificationView(self.bot))
+
 
 
 async def setup(bot: commands.Bot):

@@ -104,7 +104,7 @@ class Listeners(commands.Cog):
 
     @commands.Cog.listener(name="on_message")
     async def level_cache(self, message: discord.Message):
-        if message.author.bot:
+        if message.author.bot or not message.guild:
             return
         bumper_role = message.guild.get_role(BUMPER_ROLE)
         booster = message.guild.get_role(GUILD_BOOST_ROLE)
@@ -201,8 +201,9 @@ class Listeners(commands.Cog):
 
     @commands.Cog.listener(name="on_message")
     async def bump_handler(self, message: discord.Message):
+        if not message.guild:
+            return
         bump_role = message.guild.get_role(BUMPER_ROLE)
-
         author = message.author
 
         if (
