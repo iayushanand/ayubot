@@ -1,14 +1,14 @@
 # ------------------ imports ------------------ #
 
 from datetime import datetime
+from time import time
 
 import discord
-from discord import app_commands
 from discord.ext import commands
 
 from ext import consts
 from utils.helper import Spotify
-from time import time
+
 
 class Misc(commands.Cog):
     """
@@ -18,7 +18,7 @@ class Misc(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.db = bot.db
-    
+
     @commands.command(name="afk", help="Sets your afk status.")
     async def afk(self, ctx: commands.Context, *, reason: str = None):
         reason = reason or "AFK"
@@ -27,11 +27,11 @@ class Misc(commands.Cog):
         )
         if len(res) != 0:  # if user is already afk
             await ctx.reply(
-                embed = discord.Embed(
-                        description = f"You are already AFK: {res[0].get('afk_reason')}",
-                        color = discord.Color.brand_red()
-                    )
+                embed=discord.Embed(
+                    description=f"You are already AFK: {res[0].get('afk_reason')}",
+                    color=discord.Color.brand_red(),
                 )
+            )
             return
         await self.db.execute(
             "INSERT INTO afk VALUES ($1, $2, $3)", ctx.author.id, reason, int(time())
@@ -42,8 +42,7 @@ class Misc(commands.Cog):
             pass  # type: ignore
         await ctx.reply(
             embed=discord.Embed(
-                description="I set your AFK! " + reason,
-                color=discord.Color.green()
+                description="I set your AFK! " + reason, color=discord.Color.green()
             )
         )
 

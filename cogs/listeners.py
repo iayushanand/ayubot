@@ -45,7 +45,9 @@ class Listeners(commands.Cog):
                 delete_after=5,
             )
             try:
-                await message.author.edit(nick=message.author.name.removeprefix("[AFK]").strip())
+                await message.author.edit(
+                    nick=message.author.name.removeprefix("[AFK]").strip()
+                )
             except discord.Forbidden:
                 pass
         if message.mentions:
@@ -57,7 +59,7 @@ class Listeners(commands.Cog):
                     await message.reply(
                         embed=discord.Embed(
                             description=f"{user.display_name} is AFK: {res[0].get('afk_reason')} (<t:{res[0].get('time')}:R>)",
-                            color=discord.Color.yellow()
+                            color=discord.Color.yellow(),
                         )
                     )
 
