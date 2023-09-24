@@ -5,13 +5,13 @@ import discord
 from discord.ext import commands
 from discord.ui import Button, View, button
 
-
+from ext.consts import (ANNOUNCE_EMOJI, BADGES_EMOJI, LOADING_EMOJI,
+                        REQUIRED_STAFF_APPLY_ROLE, STAFF_BADGES_EMOJI,
+                        STAFF_FORM_CHANNEL, STAFF_ROLE, TICK_EMOJI,
+                        TRIAL_MOD_ROLE, VERIFICATION_BUTTON_EMOJI,
+                        VERIFICATION_MESSAGE_EMOJI, VERIFICATION_ROLE_ID)
 from utils.helper import Verification
-from ext.consts import (TICK_EMOJI, VERIFICATION_BUTTON_EMOJI,
-                        VERIFICATION_MESSAGE_EMOJI, VERIFICATION_ROLE_ID,
-                        BADGES_EMOJI, REQUIRED_STAFF_APPLY_ROLE,
-                        LOADING_EMOJI, STAFF_BADGES_EMOJI, STAFF_FORM_CHANNEL,
-                        STAFF_ROLE, TRIAL_MOD_ROLE, ANNOUNCE_EMOJI)
+
 
 class GiveawayView(View):
     def __init__(self, bot: commands.Bot):
@@ -261,13 +261,24 @@ class VerificationView(discord.ui.View):
                     ),
                 )
 
+
 class StaffApplyView(discord.ui.View):
     def __init__(self, bot: commands.Bot):
         super().__init__(timeout=None)
         self.bot = bot
-    
-    @button(label="Apply", style = discord.ButtonStyle.blurple, custom_id="staffapply", emoji=STAFF_BADGES_EMOJI)
-    async def apply_button(self, interaction: discord.Interaction, button: discord.Button, emoji = BADGES_EMOJI):
+
+    @button(
+        label="Apply",
+        style=discord.ButtonStyle.blurple,
+        custom_id="staffapply",
+        emoji=STAFF_BADGES_EMOJI,
+    )
+    async def apply_button(
+        self,
+        interaction: discord.Interaction,
+        button: discord.Button,
+        emoji=BADGES_EMOJI,
+    ):
         questions = [
             [
                 "How old are you?",
@@ -292,41 +303,41 @@ class StaffApplyView(discord.ui.View):
                 "Describe yourself in 3 words.",
                 "Descrie server in 3 words.",
             ],
-
         ]
         required_role = interaction.guild.get_role(REQUIRED_STAFF_APPLY_ROLE)
         if not required_role in interaction.user.roles:
             return await interaction.response.send_message(
-                embed = discord.Embed(
-                    description = ":x: You do not meet the minimum requirement to fill up this form.",
-                    color = discord.Color.red()
+                embed=discord.Embed(
+                    description=":x: You do not meet the minimum requirement to fill up this form.",
+                    color=discord.Color.red(),
                 ),
-                ephemeral = True
+                ephemeral=True,
             )
         try:
-            og_message = await interaction.user.send(content=LOADING_EMOJI+" **Fetching Questions**")
+            og_message = await interaction.user.send(
+                content=LOADING_EMOJI + " **Fetching Questions**"
+            )
         except discord.Forbidden:
             return await interaction.response.send_message(
-                embed = discord.Embed(
-                    description = ":x: Turn on your dms",
-                    color = discord.Color.red()
+                embed=discord.Embed(
+                    description=":x: Turn on your dms", color=discord.Color.red()
                 ),
-                ephemeral = True
+                ephemeral=True,
             )
         else:
             await interaction.response.send_message(
-                embed = discord.Embed(
-                    description = TICK_EMOJI+" Check your dms",
-                    color = discord.Color.green()
+                embed=discord.Embed(
+                    description=TICK_EMOJI + " Check your dms",
+                    color=discord.Color.green(),
                 ),
-                ephemeral = True
+                ephemeral=True,
             )
-        await og_message.edit( 
-            embed=  discord.Embed(
-                color = discord.Color.random(),
-                description = "Answer the following questions:"
+        await og_message.edit(
+            embed=discord.Embed(
+                color=discord.Color.random(),
+                description="Answer the following questions:",
             ),
-            content = None
+            content=None,
         )
         embed = discord.Embed()
         sset = []
@@ -336,46 +347,44 @@ class StaffApplyView(discord.ui.View):
                 embed.description = f"**{count+1}/{qc+1} - {ques}**"
                 embed.color = discord.Color.random()
                 await interaction.user.send(embed=embed)
-                
+
                 try:
                     ans = await self.bot.wait_for(
                         "message",
-                        check = lambda m: not m.guild and m.author == interaction.user,
-                        timeout = 60
+                        check=lambda m: not m.guild and m.author == interaction.user,
+                        timeout=60,
                     )
                 except asyncio.TimeoutError:
                     await interaction.user.send(
-                        embed = discord.Embed(
-                            description = ":x: Timeout!",
-                            color = discord.Color.red()
+                        embed=discord.Embed(
+                            description=":x: Timeout!", color=discord.Color.red()
                         )
                     )
                     return
                 else:
                     answers.append(ans.content)
             sset.append(answers)
-        
+
         embed = discord.Embed(
-            description = f"`{interaction.user.id}` - {interaction.user.mention} filled up the staff form!",
-            color = discord.Color.yellow()
-        ).set_thumbnail(
-            url = interaction.user.display_avatar.url
-        )
-        
+            description=f"`{interaction.user.id}` - {interaction.user.mention} filled up the staff form!",
+            color=discord.Color.yellow(),
+        ).set_thumbnail(url=interaction.user.display_avatar.url)
+
         for count, sett in enumerate(sset):
             for qc, ans in enumerate(sett):
                 embed.add_field(
-                    name = f"{count+1}/{qc+1} - {questions[count][qc]}",
-                    value = ans,
-                    inline = False
+                    name=f"{count+1}/{qc+1} - {questions[count][qc]}",
+                    value=ans,
+                    inline=False,
                 )
-        
+
         channel = self.bot.get_channel(STAFF_FORM_CHANNEL)
-        await channel.send(embed=embed, view = StaffProcessView(bot = self.bot))
+        await channel.send(embed=embed, view=StaffProcessView(bot=self.bot))
         await interaction.user.send(
-            embed = discord.Embed(
-                description = TICK_EMOJI+"Form submitted, you will recieve a dm if you are selected in staff.",
-                color = discord.Color.green()
+            embed=discord.Embed(
+                description=TICK_EMOJI
+                + "Form submitted, you will recieve a dm if you are selected in staff.",
+                color=discord.Color.green(),
             )
         )
 
@@ -384,58 +393,49 @@ class StaffProcessView(discord.ui.View):
     def __init__(self, bot: commands.Bot):
         super().__init__(timeout=None)
         self.bot = bot
-    
-    @button(label="Accept", style = discord.ButtonStyle.green, custom_id="acceptstaff")
+
+    @button(label="Accept", style=discord.ButtonStyle.green, custom_id="acceptstaff")
     async def accept(self, interaction: discord.Interaction, button: discord.Button):
         user = interaction.guild.get_member(748053138354864229)
         print(interaction.message.content)
-        role_ids = [
-            TRIAL_MOD_ROLE,
-            STAFF_ROLE
-        ]
+        role_ids = [TRIAL_MOD_ROLE, STAFF_ROLE]
         roles = [interaction.guild.get_role(role) for role in role_ids]
         await user.add_roles(roles[0], roles[1])
         await interaction.response.send_message(
-            embed = discord.Embed(
-                description=TICK_EMOJI+f"accepted {user.mention} as staff!",
-                color = discord.Color.green()
+            embed=discord.Embed(
+                description=TICK_EMOJI + f"accepted {user.mention} as staff!",
+                color=discord.Color.green(),
             )
         )
-        embed=interaction.message.embeds[0]
+        embed = interaction.message.embeds[0]
         embed.color = discord.Color.green()
         embed.set_footer(
             text=f"Accepted by {interaction.user.name}",
-            icon_url=interaction.user.display_avatar.url
+            icon_url=interaction.user.display_avatar.url,
         )
-        await interaction.message.edit(
-            embed = embed,
-            view = None
-        )
+        await interaction.message.edit(embed=embed, view=None)
         try:
             await user.send(
-                embed = discord.Embed(
-                    description = ANNOUNCE_EMOJI+f"You have been accepted as a staff in **{interaction.guild.name}**!",
-                    color = discord.Color.og_blurple()
+                embed=discord.Embed(
+                    description=ANNOUNCE_EMOJI
+                    + f"You have been accepted as a staff in **{interaction.guild.name}**!",
+                    color=discord.Color.og_blurple(),
                 )
             )
         except discord.Forbidden:
-            pass # type: ignore
-    
-    @button(label = "Reject", style = discord.ButtonStyle.red, custom_id="rejectstaff")
+            pass  # type: ignore
+
+    @button(label="Reject", style=discord.ButtonStyle.red, custom_id="rejectstaff")
     async def reject(self, interaction: discord.Interaction, button: discord.Button):
         await interaction.response.send_message(
-            embed = discord.Embed(
-                description=TICK_EMOJI+"rejected!",
-                color = discord.Color.red()
+            embed=discord.Embed(
+                description=TICK_EMOJI + "rejected!", color=discord.Color.red()
             )
         )
         embed = interaction.message.embeds[0]
         embed.color = discord.Color.red()
         embed.set_footer(
             text=f"Rejected by {interaction.user.name}",
-            icon_url=interaction.user.display_avatar.url
+            icon_url=interaction.user.display_avatar.url,
         )
-        await interaction.message.edit(
-            embed = embed,
-            view = None
-        )
+        await interaction.message.edit(embed=embed, view=None)

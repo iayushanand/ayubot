@@ -6,8 +6,9 @@ import discord
 import psutil
 from discord.ext import commands
 
-from ext.view import VerificationView, StaffApplyView
-from ext.consts import STAFF_LIST_CHANNEL, TICK_EMOJI, STAFF_BADGES_EMOJI, DISCORD_SPIN_EMOJI
+from ext.consts import (DISCORD_SPIN_EMOJI, STAFF_LIST_CHANNEL,
+                        TICK_EMOJI)
+from ext.view import StaffApplyView, VerificationView
 
 
 class Owner(commands.Cog):
@@ -131,15 +132,13 @@ class Owner(commands.Cog):
             embed=discord.Embed(description=TICK_EMOJI + "updated staff list")
         )
 
-    @commands.command(name = "staff-form")
+    @commands.command(name="staff-form")
     @commands.is_owner()
     async def staff_form(self, ctx: commands.Context):
-        embed = discord.Embed(
-            title = "**Staff Form**",
-            color = discord.Color.blue()
-        )
+        embed = discord.Embed(title="**Staff Form**", color=discord.Color.blue())
         embed.description = f"## Requirements\n- {DISCORD_SPIN_EMOJI} You must follow Discord ToS and Privacy Policy\n- {DISCORD_SPIN_EMOJI} You must have 2fa enabled\n- {DISCORD_SPIN_EMOJI} You need to be above level 5 in server\n- {DISCORD_SPIN_EMOJI} You should have a good and clean record on this server\n\n## Note\nFilling up the form will require 4-5 minutes so make sure got enough time in your hand"
         await ctx.send(embed=embed, view=StaffApplyView(bot=self.bot))
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Owner(bot))
