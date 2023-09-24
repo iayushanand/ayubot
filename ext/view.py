@@ -1,5 +1,4 @@
 import asyncio
-from typing import Optional
 
 import asyncpg
 import discord
@@ -259,8 +258,9 @@ class VerificationView(discord.ui.View):
                     ),
                 )
 
+
 # class StaffFormView(discord.ui.View):
 #     def __init__(self, bot: commands.Bot):
 #         super().__init__(timeout=None)
-    
+
 #     @button(label="Apply", color = discord.Color.blurple())
