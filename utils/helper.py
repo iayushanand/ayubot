@@ -244,7 +244,7 @@ class WelcomeBanner:
             40: ImageFont.truetype("asset/fonts/font.ttf", 40),
             30: ImageFont.truetype("asset/fonts/font.ttf", 30),
         }
-        self.color = {"black": "#000000", "white": "#ffffff", "purple": "#c6a6ff"}
+        self.color = {"black": "#000000", "white": "#ffffff", "purple": "#c6a6ff", "rosewater": "#f6dbd8"}
 
     def circle(self, pfp, size=(250, 250)):
         pfp = pfp.resize(size).convert("RGBA")
@@ -273,7 +273,7 @@ class WelcomeBanner:
             )
 
         heading = f"Welcome to {member.guild.name}"
-        banner = Image.open("asset/imgs/banner.png")
+        banner = Image.open("asset/imgs/welcomebg.png")
         inv_message = f"Invited by: {inviter.name if inviter else 'unknown'} {f'({inv if inv else 0} uses)'}"
         acc_created = f"Created: {humanize.naturaldelta(dt.timedelta(seconds=int(time.time()-member.created_at.timestamp())))} ago"
         data = Image.open(BytesIO(await member.display_avatar.read()))
@@ -281,13 +281,13 @@ class WelcomeBanner:
 
         draw = ImageDraw.Draw(banner)
 
-        draw.text((120, 15), heading, fill=self.color["black"], font=self.font[50])
-        draw.text((320, 125), member.name, fill=self.color["black"], font=self.font[50])
+        draw.text((120, 15), heading, fill=self.color["rosewater"], font=self.font[50])
+        draw.text((320, 125), member.name, fill=self.color["rosewater"], font=self.font[50])
         draw.text(
-            (320, 180), f"({member.id})", fill=self.color["black"], font=self.font[30]
+            (320, 180), f"({member.id})", fill=self.color["rosewater"], font=self.font[30]
         )
-        draw.text((320, 250), inv_message, fill=self.color["black"], font=self.font[40])
-        draw.text((320, 300), acc_created, fill=self.color["black"], font=self.font[40])
+        draw.text((320, 250), inv_message, fill=self.color["rosewater"], font=self.font[40])
+        draw.text((320, 300), acc_created, fill=self.color["rosewater"], font=self.font[40])
 
         banner.paste(pfp, (40, 100), pfp)
 

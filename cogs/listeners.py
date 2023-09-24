@@ -33,7 +33,7 @@ class Listeners(commands.Cog):
         res = await self.db.fetch(
             "SELECT afk_reason FROM afk WHERE user_id = $1", message.author.id
         )
-        if len(res) != 0:
+        if len(res) != 0 and not message.content.startswith(self.bot.command_prefix[0]):
             await self.db.execute(
                 "DELETE FROM afk WHERE user_id = $1", message.author.id
             )
@@ -45,7 +45,7 @@ class Listeners(commands.Cog):
                 delete_after=5,
             )
             try:
-                await message.author.edit(nick=message.author.display_name[5:])
+                await message.author.edit(nick=message.author.name.removeprefix("[AFK]").strip())
             except discord.Forbidden:
                 pass
         if message.mentions:
@@ -55,7 +55,10 @@ class Listeners(commands.Cog):
                 )
                 if len(res) != 0:
                     await message.reply(
-                        f"{user.display_name} is AFK: {res[0].get('afk_reason')} (<t:{res[0].get('time')}:R>)"
+                        embed=discord.Embed(
+                            description=f"{user.display_name} is AFK: {res[0].get('afk_reason')} (<t:{res[0].get('time')}:R>)",
+                            color=discord.Color.yellow()
+                        )
                     )
 
     @commands.Cog.listener()
