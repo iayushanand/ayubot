@@ -7,6 +7,7 @@ import psutil
 from discord.ext import commands
 
 from ext.view import VerificationView
+from ext.consts import STAFF_LIST_CHANNEL, TICK_EMOJI
 
 
 class Owner(commands.Cog):
@@ -91,6 +92,40 @@ class Owner(commands.Cog):
             content="# Click the button below to verify!",
             view=VerificationView(self.bot),
         )
+    
+    @commands.command(name="update-staff-list")
+    @commands.has_permissions(administrator=True)
+    async def update_staff_list(self, ctx: commands.Context):
+        staff_list_channel = self.bot.get_channel(STAFF_LIST_CHANNEL)
+        mod_roles = [
+            809642412535971882,
+            810108284073017384,
+            809642414423801916,
+            809744895350407168,
+            809756163214147665,
+            983229059259588608,
+            809756162962620448,
+            809756164019322890,
+            919243964647895071,
+        ]
+        embed = discord.Embed(title="**Staff List**", color=0xffffff)
+        embed.description = ""
+        all_members = []
+        for role in mod_roles:
+            role = ctx.guild.get_role(role)
+            valid_members = [member for member in ctx.guild.members if role in member.roles]
+            embed.description+=f"\n\n{role.mention} | **{len(role.members)}**"            
+            for member in valid_members:
+                if not member.id in all_members:
+                    embed.description += f"\n- {member.mention} - `{member.id}`"
+                    all_members.append(member.id)
+
+        await staff_list_channel.purge(limit=1)
+        await staff_list_channel.send(embed=embed)
+        staff_role = ctx.guild.get_role(1000072283282477158)
+        count = len(staff_role.members)
+        await staff_list_channel.edit(topic=f"Staff Count: {count}")
+        await ctx.reply(embed=discord.Embed(description=TICK_EMOJI+"updated staff list"))
 
 
 async def setup(bot: commands.Bot):
