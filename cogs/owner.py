@@ -92,7 +92,7 @@ class Owner(commands.Cog):
             content="# Click the button below to verify!",
             view=VerificationView(self.bot),
         )
-    
+
     @commands.command(name="update-staff-list")
     @commands.has_permissions(administrator=True)
     async def update_staff_list(self, ctx: commands.Context):
@@ -108,13 +108,15 @@ class Owner(commands.Cog):
             809756164019322890,
             919243964647895071,
         ]
-        embed = discord.Embed(title="**Staff List**", color=0xffffff)
+        embed = discord.Embed(title="**Staff List**", color=0xFFFFFF)
         embed.description = ""
         all_members = []
         for role in mod_roles:
             role = ctx.guild.get_role(role)
-            valid_members = [member for member in ctx.guild.members if role in member.roles]
-            embed.description+=f"\n\n{role.mention} | **{len(role.members)}**"            
+            valid_members = [
+                member for member in ctx.guild.members if role in member.roles
+            ]
+            embed.description += f"\n\n{role.mention} | **{len(role.members)}**"
             for member in valid_members:
                 if not member.id in all_members:
                     embed.description += f"\n- {member.mention} - `{member.id}`"
@@ -125,7 +127,9 @@ class Owner(commands.Cog):
         staff_role = ctx.guild.get_role(1000072283282477158)
         count = len(staff_role.members)
         await staff_list_channel.edit(topic=f"Staff Count: {count}")
-        await ctx.reply(embed=discord.Embed(description=TICK_EMOJI+"updated staff list"))
+        await ctx.reply(
+            embed=discord.Embed(description=TICK_EMOJI + "updated staff list")
+        )
 
     @commands.command(name = "staff-form")
     @commands.is_owner()
