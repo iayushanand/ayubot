@@ -332,10 +332,11 @@ async def generate_id(db, table):
         _id = random.randint(100000, 999999)
     return _id
 
+
 def check_hex(color: str):
     if not (0 < len(color) < 8) and not color.startswith("#"):
         return False
     for ch in color[1:].lower():
-        if ((ch < '0' or ch > '9') and (ch < 'a' or ch > 'f')):
+        if (ch < "0" or ch > "9") and (ch < "a" or ch > "f"):
             return False
     return True

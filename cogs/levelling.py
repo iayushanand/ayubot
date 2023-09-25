@@ -6,8 +6,9 @@ import discord
 import requests
 from discord.ext import commands
 from PIL import Image
+
 from ext.consts import TICK_EMOJI
-from utils.helper import make_banner, check_hex
+from utils.helper import check_hex, make_banner
 
 
 class Levelling(commands.Cog):
@@ -53,67 +54,69 @@ class Levelling(commands.Cog):
                 content=f"**{member.mention}'s level:**",
                 file=discord.File(fp=image_binary, filename=f"level.png"),
             )
-    
+
     @commands.command(name="banner-image")
     @commands.has_any_role(810419731575996416, 1000072283282477158)
     async def _banner_image(self, ctx: commands.Context, image: str):
         try:
-            Image.open(
-                requests.get(
-                    image,
-                    stream=True
-                ).raw
-            )
+            Image.open(requests.get(image, stream=True).raw)
         except Exception as e:
             await ctx.reply(
-                embed = discord.Embed(
-                    description = ":x:That image cannot be fetched by bot!",
-                    color = discord.Color.red()
+                embed=discord.Embed(
+                    description=":x:That image cannot be fetched by bot!",
+                    color=discord.Color.red(),
                 )
             )
-        await self.db.execute("UPDATE level SET img_url = $1 WHERE user_id = $2", image, ctx.author.id)
+        await self.db.execute(
+            "UPDATE level SET img_url = $1 WHERE user_id = $2", image, ctx.author.id
+        )
         await ctx.reply(
-            embed = discord.Embed(
-                description=TICK_EMOJI+"Banner Background Updated!",
-                color = discord.Color.green()
+            embed=discord.Embed(
+                description=TICK_EMOJI + "Banner Background Updated!",
+                color=discord.Color.green(),
             )
         )
-    
-    @commands.command(name = "banner-pri")
+
+    @commands.command(name="banner-pri")
     @commands.has_any_role(810419731638386698, 1000072283282477158)
     async def _banner_primirary_color(self, ctx: commands.Context, color: str):
         if not check_hex(color):
             return await ctx.reply(
-                embed = discord.Embed(
-                    description = ":x: Please enter a valid color in hex format (#rrggbb)",
-                    color = discord.Color.red()
+                embed=discord.Embed(
+                    description=":x: Please enter a valid color in hex format (#rrggbb)",
+                    color=discord.Color.red(),
                 )
             )
-        await self.db.execute("UPDATE level SET prim_col = $1 WHERE user_id = $2", color, ctx.author.id)
+        await self.db.execute(
+            "UPDATE level SET prim_col = $1 WHERE user_id = $2", color, ctx.author.id
+        )
         await ctx.reply(
-            embed = discord.Embed(
-                description=TICK_EMOJI+"Banner Primary Color Updated!",
-                color = discord.Color.green()
+            embed=discord.Embed(
+                description=TICK_EMOJI + "Banner Primary Color Updated!",
+                color=discord.Color.green(),
             )
         )
 
-    @commands.command(name = "banner-sec")
+    @commands.command(name="banner-sec")
     @commands.has_any_role(810419731638386698, 1000072283282477158)
     async def _banner_secondary_color(self, ctx: commands.Context, color: str):
         if not check_hex(color):
             return await ctx.reply(
-                embed = discord.Embed(
-                    description = ":x: Please enter a valid color in hex format (#rrggbb)",
-                    color = discord.Color.red()
+                embed=discord.Embed(
+                    description=":x: Please enter a valid color in hex format (#rrggbb)",
+                    color=discord.Color.red(),
                 )
             )
-        await self.db.execute("UPDATE level SET sec_col = $1 WHERE user_id = $2", color, ctx.author.id)
+        await self.db.execute(
+            "UPDATE level SET sec_col = $1 WHERE user_id = $2", color, ctx.author.id
+        )
         await ctx.reply(
-            embed = discord.Embed(
-                description=TICK_EMOJI+"Banner Secondary Color Updated!",
-                color = discord.Color.green()
+            embed=discord.Embed(
+                description=TICK_EMOJI + "Banner Secondary Color Updated!",
+                color=discord.Color.green(),
             )
         )
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Levelling(bot=bot))
