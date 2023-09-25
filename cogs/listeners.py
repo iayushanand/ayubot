@@ -149,11 +149,12 @@ class Listeners(commands.Cog):
                         color=discord.Color.og_blurple(),
                     )
                 )
-                # I could do this in a simpler way but I am feeling sleepy rn so will fix it later
-                for role in message.guild.roles:
-                    if f"「 Level {level+1} + 」" in role.name:
-                        await message.author.add_roles(role)
-                        break
+                # I may try do this in a simpler way but I am feeling sleepy rn so will fix it later
+                for lev in range(level):
+                    for role in message.guild.roles:
+                        if f"「 Level {lev} + 」" in role.name:
+                            await message.author.add_roles(role)
+                            break
                 return
             await self.db.execute(
                 "UPDATE level SET xp=xp+$1 WHERE user_id = $2",

@@ -117,6 +117,18 @@ class Levelling(commands.Cog):
             )
         )
 
+    # I was forced by my manager to add this command ;-; (please help I am trapped in his basement)
+    @commands.command(name = "level-set")
+    @commands.has_role(812523394779709482)
+    async def _level_set(self, ctx: commands.Context, member: discord.Member, level: int):
+        try:await self.db.execute("UPDATE level SET level = $1, xp = 0 WHERE user_id = $2", level, member.id)
+        except:await ctx.reply(embed=discord.Embed(description=":x: Something went wrong!",color=discord.Color.red()));raise Exception
+        await ctx.reply(
+            embed = discord.Embed(
+                description = TICK_EMOJI+f"updated level for {member.mention} set it to {level}",
+                color = discord.Color.green()
+            )
+        )
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Levelling(bot=bot))
