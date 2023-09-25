@@ -151,7 +151,7 @@ class Listeners(commands.Cog):
                 )
                 # I could do this in a simpler way but I am feeling sleepy rn so will fix it later
                 for role in message.guild.roles:
-                    if f"「 Level {res[3]+1} + 」" in role.name:
+                    if f"「 Level {level+1} + 」" in role.name:
                         await message.author.add_roles(role)
                         break
                 return
