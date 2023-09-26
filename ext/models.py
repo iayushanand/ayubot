@@ -53,3 +53,4 @@ class AyuBot(commands.Bot):
         self.add_view(view=view.VerificationView(bot=self))
         self.add_view(view=view.StaffApplyView(bot=self))
         self.add_view(view=view.StaffProcessView(bot=self))
+        self.add_view(view=view.SelfRoleView(bot=self))

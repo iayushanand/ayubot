@@ -3,7 +3,7 @@ import asyncio
 import asyncpg
 import discord
 from discord.ext import commands
-from discord.ui import Button, View, button
+from discord.ui import Button, View, button, select
 
 from ext.consts import (ANNOUNCE_EMOJI, BADGES_EMOJI, LOADING_EMOJI,
                         REQUIRED_STAFF_APPLY_ROLE, STAFF_BADGES_EMOJI,
@@ -170,7 +170,7 @@ class Roll(View):
         )
 
 
-class VerificationView(discord.ui.View):
+class VerificationView(View):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         super().__init__(timeout=None)
@@ -262,7 +262,7 @@ class VerificationView(discord.ui.View):
                 )
 
 
-class StaffApplyView(discord.ui.View):
+class StaffApplyView(View):
     def __init__(self, bot: commands.Bot):
         super().__init__(timeout=None)
         self.bot = bot
@@ -389,7 +389,7 @@ class StaffApplyView(discord.ui.View):
         )
 
 
-class StaffProcessView(discord.ui.View):
+class StaffProcessView(View):
     def __init__(self, bot: commands.Bot):
         super().__init__(timeout=None)
         self.bot = bot
@@ -441,7 +441,393 @@ class StaffProcessView(discord.ui.View):
         await interaction.message.edit(embed=embed, view=None)
 
 
-class SelfRoleView(discord.ui.View):
+class SelfRoleView(View):
     def __init__(self, bot: commands.Bot):
         super().__init__(timeout=None)
         self.bot = bot
+
+
+class SelfRoleView(View):
+    def __init__(self, bot: commands.Bot):
+        super().__init__(timeout=None)
+        self.bot = bot
+    
+    @button(label="Coding Roles", custom_id="codingRoles")
+    async def coding_roles(self, interaction: discord.Interaction, button: discord.Button):
+        await interaction.response.send_message(
+            view=CodingRoles(self.bot),
+            ephemeral=True
+        )
+    
+    @button(label="Gender Roles", custom_id="genderRoles")
+    async def gender_roles(self, interaction: discord.Interaction, button: discord.Button):
+        await interaction.response.send_message(
+            view=GenderRoles(self.bot),
+            ephemeral=True
+        )
+    
+    @button(label="Ping Roles", custom_id="pingRoles")
+    async def ping_roles(self, interaction: discord.Interaction, button: discord.Button):
+        await interaction.response.send_message(
+            view=PingRoles(self.bot),
+            ephemeral=True
+        )
+
+class CodingRoles(View):
+    def __init__(self, bot: commands.Bot):
+        super().__init__(timeout=None)
+        self.bot = bot
+    
+    @button(
+        label="Python",
+        emoji = "<:python:1016025084789530714>",
+        style=discord.ButtonStyle.blurple
+    )
+    async def cl_py(self, interaction: discord.Interaction, button: discord.Button):
+        role: discord.Role = interaction.guild.get_role(
+            1156309813798633572
+        )
+        if role in interaction.user.roles:
+            await interaction.user.remove_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} removed!",
+                    color = discord.Color.yellow()
+                ),
+                ephemeral=True
+            )
+        else:
+            await interaction.user.add_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} added!",
+                    color = discord.Color.green()
+                ),
+                ephemeral = True
+            )
+        
+
+    @button(
+        label="Javascript",
+        emoji = "<:JavaScript:1156300862185021482>",
+        style=discord.ButtonStyle.blurple
+    )
+    async def cl_js(self, interaction: discord.Interaction, button: discord.Button):
+        role: discord.Role = interaction.guild.get_role(
+            1156309872455983227
+        )
+        if role in interaction.user.roles:
+            await interaction.user.remove_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} removed!",
+                    color = discord.Color.yellow()
+                ),
+                ephemeral=True
+            )
+        else:
+            await interaction.user.add_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} added!",
+                    color = discord.Color.green()
+                ),
+                ephemeral = True
+            )
+
+    @button(
+        label="Other",
+        emoji = "<:code:942623640967577630>",
+        style=discord.ButtonStyle.blurple
+    )
+    async def cl_ot(self, interaction: discord.Interaction, button: discord.Button):
+        role: discord.Role = interaction.guild.get_role(
+            1156309928106012733
+        )
+        if role in interaction.user.roles:
+            await interaction.user.remove_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} removed!",
+                    color = discord.Color.yellow()
+                ),
+                ephemeral=True
+            )
+        else:
+            await interaction.user.add_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} added!",
+                    color = discord.Color.green()
+                ),
+                ephemeral = True
+            )
+
+class GenderRoles(View):
+    def __init__(self, bot: commands.Bot):
+        super().__init__(timeout=None)
+        self.bot = bot
+    
+    @button(
+        label="Male",
+        emoji = "<a:Male:997896650955694210>",
+        style=discord.ButtonStyle.blurple
+    )
+    async def gm(self, interaction: discord.Interaction, button: discord.Button):
+        role: discord.Role = interaction.guild.get_role(
+            809985079282499594
+        )
+        if role in interaction.user.roles:
+            await interaction.user.remove_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} removed!",
+                    color = discord.Color.yellow()
+                ),
+                ephemeral=True
+            )
+        else:
+            await interaction.user.add_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} added!",
+                    color = discord.Color.green()
+                ),
+                ephemeral = True
+            )
+    
+    @button(
+        label="Female",
+        emoji = "<a:Female:997896655670087701>",
+        style=discord.ButtonStyle.blurple
+    )
+    async def gf(self, interaction: discord.Interaction, button: discord.Button):
+        role: discord.Role = interaction.guild.get_role(
+            809985239773872138
+        )
+        if role in interaction.user.roles:
+            await interaction.user.remove_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} removed!",
+                    color = discord.Color.yellow()
+                ),
+                ephemeral=True
+            )
+        else:
+            await interaction.user.add_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} added!",
+                    color = discord.Color.green()
+                ),
+                ephemeral = True
+            )
+    
+    @button(
+        label="Non Binary",
+        emoji = "<:NonBinary:1000042393967542344>",
+        style=discord.ButtonStyle.blurple
+    )
+    async def go(self, interaction: discord.Interaction, button: discord.Button):
+        role: discord.Role = interaction.guild.get_role(
+            1003320420730146896
+        )
+        if role in interaction.user.roles:
+            await interaction.user.remove_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} removed!",
+                    color = discord.Color.yellow()
+                ),
+                ephemeral=True
+            )
+        else:
+            await interaction.user.add_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} added!",
+                    color = discord.Color.green()
+                ),
+                ephemeral = True
+            )
+
+class PingRoles(View):
+    def __init__(self, bot: commands.Bot):
+        super().__init__(timeout=None)
+        self.bot = bot
+    
+    @button(
+        label="QOTD",
+        emoji="<a:Ping:1156312660518908048>",
+        style=discord.ButtonStyle.blurple,
+        row=0
+    )
+    async def qotd(self, interaction: discord.Interaction, button: discord.Button):
+        role: discord.Role = interaction.guild.get_role(
+            810131877616812062
+        )
+        if role in interaction.user.roles:
+            await interaction.user.remove_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} removed!",
+                    color = discord.Color.yellow()
+                ),
+                ephemeral=True
+            )
+        else:
+            await interaction.user.add_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} added!",
+                    color = discord.Color.green()
+                ),
+                ephemeral = True
+            )
+    
+    @button(
+        label="Poll",
+        emoji="<a:Ping:1156312660518908048>",
+        style=discord.ButtonStyle.blurple,
+        row=0
+    )
+    async def poll(self, interaction: discord.Interaction, button: discord.Button):
+        role: discord.Role = interaction.guild.get_role(
+            810131946587291668
+        )
+        if role in interaction.user.roles:
+            await interaction.user.remove_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} removed!",
+                    color = discord.Color.yellow()
+                ),
+                ephemeral=True
+            )
+        else:
+            await interaction.user.add_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} added!",
+                    color = discord.Color.green()
+                ),
+                ephemeral = True
+            )
+    
+    @button(
+        emoji="<a:Ping:1156312660518908048>",
+        label="Announcements",
+        style=discord.ButtonStyle.blurple,
+        row=0
+    )
+    async def ping(self, interaction: discord.Interaction, button: discord.Button):
+        role: discord.Role = interaction.guild.get_role(
+            810131991080992788
+        )
+        if role in interaction.user.roles:
+            await interaction.user.remove_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} removed!",
+                    color = discord.Color.yellow()
+                ),
+                ephemeral=True
+            )
+        else:
+            await interaction.user.add_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} added!",
+                    color = discord.Color.green()
+                ),
+                ephemeral = True
+            )
+    
+    @button(
+        label="Giveaway",
+        emoji="<a:Ping:1156312660518908048>",
+        style=discord.ButtonStyle.blurple,
+        row=1
+    )
+    async def gaway(self, interaction: discord.Interaction, button: discord.Button):
+        role: discord.Role = interaction.guild.get_role(
+            827041561413287946  
+        )
+        if role in interaction.user.roles:
+            await interaction.user.remove_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} removed!",
+                    color = discord.Color.yellow()
+                ),
+                ephemeral=True
+            )
+        else:
+            await interaction.user.add_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} added!",
+                    color = discord.Color.green()
+                ),
+                ephemeral = True
+            )
+    
+    @button(
+        label="Helper",
+        emoji="<a:Ping:1156312660518908048>",
+        style=discord.ButtonStyle.blurple,
+        row=1
+    )
+    async def helper(self, interaction: discord.Interaction, button: discord.Button):
+        role: discord.Role = interaction.guild.get_role(
+            889014603563032576
+        )
+        if role in interaction.user.roles:
+            await interaction.user.remove_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} removed!",
+                    color = discord.Color.yellow()
+                ),
+                ephemeral=True
+            )
+        else:
+            await interaction.user.add_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} added!",
+                    color = discord.Color.green()
+                ),
+                ephemeral = True
+            )
+    
+    @button(
+        label="Chat Revival",
+        emoji="<a:Ping:1156312660518908048>",
+        style=discord.ButtonStyle.blurple,
+        row=1
+    )
+    async def revival(self, interaction: discord.Interaction, button: discord.Button):
+        role: discord.Role = interaction.guild.get_role(
+            810132068150673420
+        )
+        if role in interaction.user.roles:
+            await interaction.user.remove_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} removed!",
+                    color = discord.Color.yellow()
+                ),
+                ephemeral=True
+            )
+        else:
+            await interaction.user.add_roles(role)
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    description = TICK_EMOJI+f"{role.mention} added!",
+                    color = discord.Color.green()
+                ),
+                ephemeral = True
+            )
+            

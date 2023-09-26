@@ -7,7 +7,7 @@ import psutil
 from discord.ext import commands
 
 from ext.consts import DISCORD_SPIN_EMOJI, STAFF_LIST_CHANNEL, TICK_EMOJI
-from ext.view import StaffApplyView, VerificationView
+from ext.view import StaffApplyView, VerificationView, SelfRoleView
 
 
 class Owner(commands.Cog):
@@ -138,6 +138,11 @@ class Owner(commands.Cog):
         embed.description = f"## Requirements\n- {DISCORD_SPIN_EMOJI} You must follow Discord ToS and Privacy Policy\n- {DISCORD_SPIN_EMOJI} You must have 2fa enabled\n- {DISCORD_SPIN_EMOJI} You need to be above level 5 in server\n- {DISCORD_SPIN_EMOJI} You should have a good and clean record on this server\n\n## Note\nFilling up the form will require 4-5 minutes so make sure got enough time in your hand"
         await ctx.send(embed=embed, view=StaffApplyView(bot=self.bot))
 
+    @commands.command(name = "self-roles")
+    @commands.is_owner()
+    async def self_roles(self, ctx: commands.Context):
+        await ctx.send(view=SelfRoleView(self.bot))
+    
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Owner(bot))
