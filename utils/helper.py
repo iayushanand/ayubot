@@ -18,7 +18,7 @@ from PIL import Image, ImageChops, ImageDraw, ImageFont
 
 
 def circle(pfp, size=(110, 110)):
-    pfp = pfp.resize(size, Image.ANTIALIAS).convert("RGBA")
+    pfp = pfp.resize(size).convert("RGBA")
 
     bigsize = (pfp.size[0] * 3, pfp.size[1] * 3)
     mask = Image.new("L", bigsize, 0)
@@ -251,18 +251,6 @@ class WelcomeBanner:
             "rosewater": "#f6dbd8",
         }
 
-    def circle(self, pfp, size=(250, 250)):
-        pfp = pfp.resize(size).convert("RGBA")
-
-        bigsize = (pfp.size[0] * 3, pfp.size[1] * 3)
-        mask = Image.new("L", bigsize, 0)
-        draw = ImageDraw.Draw(mask)
-        draw.ellipse((0, 0) + bigsize, fill=255)
-        mask = mask.resize(pfp.size)
-        mask = ImageChops.darker(mask, pfp.split()[-1])
-        pfp.putalpha(mask)
-        return pfp
-
     async def create_banner(self, member: discord.Member) -> discord.File:
         inviter = None
         async for entry in member.guild.audit_logs(
@@ -282,7 +270,7 @@ class WelcomeBanner:
         inv_message = f"Invited by: {inviter.name if inviter else 'unknown'} {f'({inv if inv else 0} uses)'}"
         acc_created = f"Created: {humanize.naturaldelta(dt.timedelta(seconds=int(time.time()-member.created_at.timestamp())))} ago"
         data = Image.open(BytesIO(await member.display_avatar.read()))
-        pfp = self.circle(data)
+        pfp = circle(data)
 
         draw = ImageDraw.Draw(banner)
 
