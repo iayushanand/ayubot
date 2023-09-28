@@ -5,20 +5,11 @@ import discord
 from discord.ext import commands
 from discord.ui import Button, View, button
 
-from ext.consts import (
-    ANNOUNCE_EMOJI,
-    BADGES_EMOJI,
-    LOADING_EMOJI,
-    REQUIRED_STAFF_APPLY_ROLE,
-    STAFF_BADGES_EMOJI,
-    STAFF_FORM_CHANNEL,
-    STAFF_ROLE,
-    TICK_EMOJI,
-    TRIAL_MOD_ROLE,
-    VERIFICATION_BUTTON_EMOJI,
-    VERIFICATION_MESSAGE_EMOJI,
-    VERIFICATION_ROLE_ID,
-)
+from ext.consts import (ANNOUNCE_EMOJI, BADGES_EMOJI, LOADING_EMOJI,
+                        REQUIRED_STAFF_APPLY_ROLE, STAFF_BADGES_EMOJI,
+                        STAFF_FORM_CHANNEL, STAFF_ROLE, TICK_EMOJI,
+                        TRIAL_MOD_ROLE, VERIFICATION_BUTTON_EMOJI,
+                        VERIFICATION_MESSAGE_EMOJI, VERIFICATION_ROLE_ID)
 from utils.helper import Verification
 
 
