@@ -7,7 +7,8 @@ import psutil
 from discord.ext import commands
 
 from ext.consts import DISCORD_SPIN_EMOJI, STAFF_LIST_CHANNEL, TICK_EMOJI
-from ext.ui.view import SelfRoleView, StaffApplyView, VerificationView, UserHelpView
+from ext.ui.view import (SelfRoleView, StaffApplyView, UserHelpView,
+                         VerificationView)
 
 
 class Owner(commands.Cog):

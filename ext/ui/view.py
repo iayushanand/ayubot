@@ -4,7 +4,6 @@ import asyncpg
 import discord
 from discord.ext import commands
 from discord.ui import Button, View, button
-from ext.ui import modals
 
 from ext.consts import (
     ANNOUNCE_EMOJI,
