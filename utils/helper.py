@@ -332,5 +332,5 @@ def check_hex(color: str):
 
 # WIP
 def filter_words(word: str, sentence: str):
-    filtered = sentence.replace(f"{word[1:]}", "\*"*len(word[1:]))
+    filtered = sentence.replace(f"{word[1:]}", "\*" * len(word[1:]))
     ...

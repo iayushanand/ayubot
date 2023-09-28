@@ -259,15 +259,13 @@ class Listeners(commands.Cog):
         channel = self.bot.get_channel(WELCOME_CHANNEL_ID)
         await channel.send(file=banner)
 
-
     # WIP
-    @commands.Cog.listener(name = "on_message")
+    @commands.Cog.listener(name="on_message")
     async def _find_banned_words(self, message: discord.Message):
         banned_words = open("asset/misc/banned_words.txt").read().lower().split(", ")
         for word in banned_words:
             if word in message.content.lower():
                 ...
-                
 
 
 async def setup(bot: commands.Bot):

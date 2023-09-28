@@ -4,13 +4,13 @@ import asyncpg
 import discord
 from discord.ext import commands
 from discord.ui import Button, View, button
-from ext.ui import modals
 
 from ext.consts import (ANNOUNCE_EMOJI, BADGES_EMOJI, LOADING_EMOJI,
                         REQUIRED_STAFF_APPLY_ROLE, STAFF_BADGES_EMOJI,
                         STAFF_FORM_CHANNEL, STAFF_ROLE, TICK_EMOJI,
                         TRIAL_MOD_ROLE, VERIFICATION_BUTTON_EMOJI,
                         VERIFICATION_MESSAGE_EMOJI, VERIFICATION_ROLE_ID)
+from ext.ui import modals
 from utils.helper import Verification
 
 
@@ -813,6 +813,7 @@ class PingRoles(View):
                 ephemeral=True,
             )
 
+
 class UserHelpView(View):
     def __init__(self, bot: commands.Bot):
         super().__init__(timeout=None)
@@ -822,12 +823,8 @@ class UserHelpView(View):
         label="Get Help",
         custom_id="UserHelpButton",
         style=discord.ButtonStyle.blurple,
-        emoji="<:developer:942447062476288050>"
+        emoji="<:developer:942447062476288050>",
     )
-    async def gethelp(
-        self,
-        interaction:discord.Interaction,
-        button: discord.Button
-    ):
+    async def gethelp(self, interaction: discord.Interaction, button: discord.Button):
         modal = modals.UserHelpModal(self.bot)
         await interaction.response.send_modal(modal)
