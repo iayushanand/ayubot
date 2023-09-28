@@ -7,7 +7,7 @@ import psutil
 from discord.ext import commands
 
 from ext.consts import DISCORD_SPIN_EMOJI, STAFF_LIST_CHANNEL, TICK_EMOJI
-from ext.view import SelfRoleView, StaffApplyView, VerificationView
+from ext.ui.view import SelfRoleView, StaffApplyView, VerificationView, UserHelpView
 
 
 class Owner(commands.Cog):
@@ -142,6 +142,16 @@ class Owner(commands.Cog):
     @commands.is_owner()
     async def self_roles(self, ctx: commands.Context):
         await ctx.send(view=SelfRoleView(self.bot))
+    
+    @commands.command(name="help-msg")
+    @commands.is_owner()
+    async def help_msg(self, ctx: commands.Context):
+        await ctx.send(
+            embed=discord.Embed(
+                description="Get Help by clicking the button below!",
+                color=discord.Color.og_blurple()),
+                view=UserHelpView(self.bot)
+        )
 
 
 async def setup(bot: commands.Bot):

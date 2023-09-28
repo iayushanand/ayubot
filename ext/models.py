@@ -5,7 +5,8 @@ from colorama import Style
 from discord.ext import commands
 from dotenv import load_dotenv
 
-from ext import consts, view
+from ext import consts
+from ext.ui import view
 from utils import botdb
 
 load_dotenv()
@@ -54,3 +55,4 @@ class AyuBot(commands.Bot):
         self.add_view(view=view.StaffApplyView(bot=self))
         self.add_view(view=view.StaffProcessView(bot=self))
         self.add_view(view=view.SelfRoleView(bot=self))
+        self.add_view(view=view.UserHelpView(bot=self))

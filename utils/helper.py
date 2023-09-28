@@ -328,3 +328,9 @@ def check_hex(color: str):
         if (ch < "0" or ch > "9") and (ch < "a" or ch > "f"):
             return False
     return True
+
+
+# WIP
+def filter_words(word: str, sentence: str):
+    filtered = sentence.replace(f"{word[1:]}", "\*"*len(word[1:]))
+    ...

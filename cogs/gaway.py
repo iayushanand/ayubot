@@ -8,7 +8,7 @@ import discord
 import pytimeparser
 from discord.ext import commands
 
-from ext.view import GiveawayView
+from ext.ui.view import GiveawayView
 
 
 class Giveaways(commands.Cog):
