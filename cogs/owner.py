@@ -142,15 +142,16 @@ class Owner(commands.Cog):
     @commands.is_owner()
     async def self_roles(self, ctx: commands.Context):
         await ctx.send(view=SelfRoleView(self.bot))
-    
+
     @commands.command(name="help-msg")
     @commands.is_owner()
     async def help_msg(self, ctx: commands.Context):
         await ctx.send(
             embed=discord.Embed(
                 description="Get Help by clicking the button below!",
-                color=discord.Color.og_blurple()),
-                view=UserHelpView(self.bot)
+                color=discord.Color.og_blurple(),
+            ),
+            view=UserHelpView(self.bot),
         )
 
 

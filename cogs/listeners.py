@@ -8,10 +8,18 @@ import asyncpg
 import discord
 from discord.ext import commands
 
-from ext.consts import (BAN_FORM_CHANNEL, BUMPER_ROLE, DEFAULT_LEVEL_IMAGE,
-                        GENERAL_CHAT_ID, GUILD_BOOST_ROLE, GUILD_ID,
-                        LEVEL_PRIMARY_COLOR, LEVEL_SECONDARY_COLOR,
-                        LOG_CHANNEL_ID, WELCOME_CHANNEL_ID)
+from ext.consts import (
+    BAN_FORM_CHANNEL,
+    BUMPER_ROLE,
+    DEFAULT_LEVEL_IMAGE,
+    GENERAL_CHAT_ID,
+    GUILD_BOOST_ROLE,
+    GUILD_ID,
+    LEVEL_PRIMARY_COLOR,
+    LEVEL_SECONDARY_COLOR,
+    LOG_CHANNEL_ID,
+    WELCOME_CHANNEL_ID,
+)
 from ext.ui.view import Ban_Appeal
 from utils.helper import WelcomeBanner, get_xp
 
@@ -259,15 +267,13 @@ class Listeners(commands.Cog):
         channel = self.bot.get_channel(WELCOME_CHANNEL_ID)
         await channel.send(file=banner)
 
-
     # WIP
-    @commands.Cog.listener(name = "on_message")
+    @commands.Cog.listener(name="on_message")
     async def _find_banned_words(self, message: discord.Message):
         banned_words = open("asset/misc/banned_words.txt").read().lower().split(", ")
         for word in banned_words:
             if word in message.content.lower():
                 ...
-                
 
 
 async def setup(bot: commands.Bot):

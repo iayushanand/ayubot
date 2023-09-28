@@ -3,3 +3,5 @@
 env/
 */__pycache__
 venv/
+ext/ui/__pycache__/modals.cpython-311.pyc
+ext/ui/__pycache__/view.cpython-311.pyc
