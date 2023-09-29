@@ -8,7 +8,6 @@ from discord.ui import Modal, TextInput
 from ext.ui import view
 
 
-
 class UserHelpModal(Modal):
     def __init__(self, bot: commands.Bot) -> None:
         super().__init__(timeout=None, title="User Help")
