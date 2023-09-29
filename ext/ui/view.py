@@ -3,8 +3,6 @@ import time
 
 import asyncpg
 import discord
-
-
 from discord.ext import commands
 from discord.ui import Button, View, button
 
@@ -833,158 +831,126 @@ class TicketOpenView(View):
     def __init__(self, bot: commands.Bot):
         super().__init__(timeout=None)
         self.bot = bot
-    
+
     @button(
-        label = "Click Here",
-        emoji = "🎫",
-        style = discord.ButtonStyle.blurple,
-        custom_id="ticketopen"
+        label="Click Here",
+        emoji="🎫",
+        style=discord.ButtonStyle.blurple,
+        custom_id="ticketopen",
     )
     async def open_ticket(
-        self,
-        interaction: discord.Interaction,
-        button: discord.Button
+        self, interaction: discord.Interaction, button: discord.Button
     ):
-        category = discord.utils.get(interaction.guild.categories, id=OPEN_TICKET_CATEGOARY)
+        category = discord.utils.get(
+            interaction.guild.categories, id=OPEN_TICKET_CATEGOARY
+        )
 
         for channel in category.text_channels:
             if channel.topic == interaction.user.id:
                 return await interaction.response.send_message(
-                    embed = discord.Embed(
-                        description = f":x:You already have a ticket here ({channel.mention})",
-                        color = discord.Color.red()
+                    embed=discord.Embed(
+                        description=f":x:You already have a ticket here ({channel.mention})",
+                        color=discord.Color.red(),
                     ),
-                    ephemeral = True
+                    ephemeral=True,
                 )
 
-        staff = interaction.guild.get_role(
-            STAFF_ROLE
-        )
+        staff = interaction.guild.get_role(STAFF_ROLE)
 
         overwrites = {
-            interaction.guild.default_role:discord.PermissionOverwrite(read_messages=False),
-            staff:discord.PermissionOverwrite(read_messages=True)
+            interaction.guild.default_role: discord.PermissionOverwrite(
+                read_messages=False
+            ),
+            staff: discord.PermissionOverwrite(read_messages=True),
         }
 
         channel = await category.create_text_channel(
-            name = "ticket-"+interaction.user.name,
-            topic = interaction.user.id,
-            overwrites=overwrites
+            name="ticket-" + interaction.user.name,
+            topic=interaction.user.id,
+            overwrites=overwrites,
         )
 
         await interaction.response.send_message(
-            embed = discord.Embed(
-                description = TICK_EMOJI+f"ticket created: {channel.mention}",
-                color = discord.Color.green()
+            embed=discord.Embed(
+                description=TICK_EMOJI + f"ticket created: {channel.mention}",
+                color=discord.Color.green(),
             ),
-            ephemeral = True
+            ephemeral=True,
         )
-        em=discord.Embed(title="Welcome!",
+        em = discord.Embed(
+            title="Welcome!",
             description=f"Support will arrive shortly,\nmake sure not to ping anyone.\nFor fast support make sure\nto drop your question before hand.",
-            color=discord.Color.dark_blue()
+            color=discord.Color.dark_blue(),
         ).set_author(
-            name=interaction.user.name,
-            icon_url=interaction.user.display_avatar
+            name=interaction.user.name, icon_url=interaction.user.display_avatar
         )
-        await channel.send(
-            embed=em,
-            view = TicketCloseView(self.bot)
-        )
+        await channel.send(embed=em, view=TicketCloseView(self.bot))
+
 
 class TranscriptButton(Button):
     def __init__(self, url: str):
         super().__init__(
-            style = discord.ButtonStyle.url,
+            style=discord.ButtonStyle.url,
             emoji="<:link:942623752523501678>",
-            url = url,
-            label = "Trasncript"
+            url=url,
+            label="Trasncript",
         )
 
-class TrashButton():
+
+class TrashButton:
     ...
+
 
 class TicketCloseView(View):
     def __init__(self, bot: commands.Bot):
         super().__init__(timeout=None)
         self.bot = bot
-    
-    @button(
-        label = "Close",
-        style = discord.ButtonStyle.red,
-        custom_id = "closebtn"
-    )
+
+    @button(label="Close", style=discord.ButtonStyle.red, custom_id="closebtn")
     async def close_ticket(
         self,
         interaction: discord.Interaction,
         button: discord.Button,
     ):
         await interaction.response.send_message(
-            embed = discord.Embed(
-                description = TICK_EMOJI+"Closing Ticket",
-                color = discord.Color.green()
+            embed=discord.Embed(
+                description=TICK_EMOJI + "Closing Ticket", color=discord.Color.green()
             ),
-            ephemeral = True
+            ephemeral=True,
         )
-        await interaction.message.edit(
-            embed=interaction.message.embeds[0],
-            view=None
-        )
+        await interaction.message.edit(embed=interaction.message.embeds[0], view=None)
         category = discord.utils.get(
-            interaction.guild.categories,
-            id=CLOSE_TICKET_CATEGOARY
+            interaction.guild.categories, id=CLOSE_TICKET_CATEGOARY
         )
         channel = interaction.channel
-        staff = interaction.guild.get_role(
-            STAFF_ROLE
-        )
+        staff = interaction.guild.get_role(STAFF_ROLE)
 
-        overwrites = {
-            staff:discord.PermissionOverwrite(read_messages=True)
-        }
-        await channel.edit(
-            category=category
-        )
+        overwrites = {staff: discord.PermissionOverwrite(read_messages=True)}
+        await channel.edit(category=category)
         await channel.send(
-            embed = discord.Embed(
-                description = f"Ticked Closed by {interaction.user.mention}",
-                color = discord.Color.blurple()
+            embed=discord.Embed(
+                description=f"Ticked Closed by {interaction.user.mention}",
+                color=discord.Color.blurple(),
             )
         )
         handle = interaction.guild.get_member(int(interaction.channel.topic))
         log_channel = interaction.guild.get_channel(TICKET_LOGS_CHANNEL)
-        embed = discord.Embed(
-            title = "Ticket Closed",
-            color = discord.Color.og_blurple(),
-        ).add_field(
-            name = "Opened by:",
-            value = handle.mention,
-            inline=False
-        ).add_field(
-            name = "Closed by:",
-            value = interaction.user.mention,
-            inline=False
-        ).add_field(
-            name = "Closing Time:",
-            inline=False,
-            value = f"<t:{int(time.time())}:f>"
+        embed = (
+            discord.Embed(
+                title="Ticket Closed",
+                color=discord.Color.og_blurple(),
+            )
+            .add_field(name="Opened by:", value=handle.mention, inline=False)
+            .add_field(name="Closed by:", value=interaction.user.mention, inline=False)
+            .add_field(
+                name="Closing Time:", inline=False, value=f"<t:{int(time.time())}:f>"
+            )
         )
         view = View(timeout=None)
-        view.add_item(
-            TranscriptButton("https://www.youtube.com/watch?v=fC7oUOUEEi4")
-        )
-        log_message = await log_channel.send(
-            embed = embed,
-            view=view
-        )
-        embed.add_field(
-            name = "Logs:",
-            inline=False,
-            value = log_message.jump_url
-        )
+        view.add_item(TranscriptButton("https://www.youtube.com/watch?v=fC7oUOUEEi4"))
+        log_message = await log_channel.send(embed=embed, view=view)
+        embed.add_field(name="Logs:", inline=False, value=log_message.jump_url)
         try:
-            await handle.send(
-                embed=embed,
-                view=view
-            )
+            await handle.send(embed=embed, view=view)
         except discord.Forbidden:
             pass
