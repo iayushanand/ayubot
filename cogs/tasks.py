@@ -100,7 +100,7 @@ class TaskCog(commands.Cog):
 
     @tasks.loop(minutes=2)
     async def send_bump_message(self):
-        with open("bumper.txt", "r") as f:
+        with open("asset/misc/bumper.txt", "r") as f:
             content = f.read()
             in_list = content.split(", ")
         try:
@@ -111,7 +111,7 @@ class TaskCog(commands.Cog):
                         description="Bump Available Now.", color=discord.Color.green()
                     )
                 )
-                with open("bumper.txt", "w") as f:
+                with open("asset/misc/bumper.txt", "w") as f:
                     f.write("000")
         except IndexError:
             pass

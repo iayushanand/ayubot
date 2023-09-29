@@ -226,7 +226,7 @@ class Listeners(commands.Cog):
             await asyncio.sleep(0.5)
             user: discord.Member = message.guild.get_member(message.interaction.user.id)
 
-            with open("bumper.txt", "w") as f:
+            with open("asset/misc/bumper.txt", "w") as f:
                 f.write(f"{user.id}, {int(time()+(2*60*60))}, {message.channel.id}")
 
             await user.add_roles(bump_role)
@@ -245,11 +245,13 @@ class Listeners(commands.Cog):
         if message.author.bot:
             return
         if bump_role in author.roles:
-            with open("bumper.txt", "r") as f:
+            with open("asset/misc/bumper.txt", "r") as f:
                 data = f.read().split(", ")
             if not author.id == int(data[0]):
                 await author.remove_roles(bump_role)
                 return
+            else:
+                await author.add_roles(bump_role)
 
     @commands.Cog.listener(name="on_member_join")
     async def welcome_message(self, member: discord.Member):
@@ -258,14 +260,6 @@ class Listeners(commands.Cog):
         banner = await WelcomeBanner(self.bot).create_banner(member=member)
         channel = self.bot.get_channel(WELCOME_CHANNEL_ID)
         await channel.send(file=banner)
-
-    # WIP
-    @commands.Cog.listener(name="on_message")
-    async def _find_banned_words(self, message: discord.Message):
-        banned_words = open("asset/misc/banned_words.txt").read().lower().split(", ")
-        for word in banned_words:
-            if word in message.content.lower():
-                ...
 
 
 async def setup(bot: commands.Bot):
