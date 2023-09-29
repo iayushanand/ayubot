@@ -887,7 +887,8 @@ class TicketOpenView(View):
             icon_url=interaction.user.display_avatar
         )
         await channel.send(
-            embed=em
+            embed=em,
+            view = TicketCloseView(self.bot)
         )
 
 class TranscriptButton(Button):
@@ -896,8 +897,11 @@ class TranscriptButton(Button):
             style = discord.ButtonStyle.url,
             emoji="<:link:942623752523501678>",
             url = url,
-            custom_id = "urlll"
+            label = "Trasncript"
         )
+
+class TrashButton():
+    ...
 
 class TicketCloseView(View):
     def __init__(self, bot: commands.Bot):
@@ -930,6 +934,16 @@ class TicketCloseView(View):
             id=CLOSE_TICKET_CATEGOARY
         )
         channel = interaction.channel
+        staff = interaction.guild.get_role(
+            STAFF_ROLE
+        )
+
+        overwrites = {
+            staff:discord.PermissionOverwrite(read_messages=True)
+        }
+        await channel.edit(
+            category=category
+        )
         await channel.send(
             embed = discord.Embed(
                 description = f"Ticked Closed by {interaction.user.mention}",
@@ -940,15 +954,18 @@ class TicketCloseView(View):
         log_channel = interaction.guild.get_channel(TICKET_LOGS_CHANNEL)
         embed = discord.Embed(
             title = "Ticket Closed",
-            color = discord.Color.og_blurple()
+            color = discord.Color.og_blurple(),
         ).add_field(
             name = "Opened by:",
-            value = handle.mention
+            value = handle.mention,
+            inline=False
         ).add_field(
             name = "Closed by:",
-            value = interaction.user.mention
+            value = interaction.user.mention,
+            inline=False
         ).add_field(
             name = "Closing Time:",
+            inline=False,
             value = f"<t:{int(time.time())}:f>"
         )
         view = View(timeout=None)
@@ -961,6 +978,7 @@ class TicketCloseView(View):
         )
         embed.add_field(
             name = "Logs:",
+            inline=False,
             value = log_message.jump_url
         )
         try:
