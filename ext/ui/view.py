@@ -5,11 +5,7 @@ import discord
 from discord.ext import commands
 from discord.ui import Button, View, button
 
-from ext.consts import (ANNOUNCE_EMOJI, BADGES_EMOJI, LOADING_EMOJI,
-                        REQUIRED_STAFF_APPLY_ROLE, STAFF_BADGES_EMOJI,
-                        STAFF_FORM_CHANNEL, STAFF_ROLE, TICK_EMOJI,
-                        TRIAL_MOD_ROLE, VERIFICATION_BUTTON_EMOJI,
-                        VERIFICATION_MESSAGE_EMOJI, VERIFICATION_ROLE_ID)
+from ext.consts import *
 from ext.ui import modals
 from utils.helper import Verification
 
@@ -828,3 +824,68 @@ class UserHelpView(View):
     async def gethelp(self, interaction: discord.Interaction, button: discord.Button):
         modal = modals.UserHelpModal(self.bot)
         await interaction.response.send_modal(modal)
+
+
+class TicketOpenView(View):
+    def __init__(self, bot: commands.Bot):
+        super().__init__(timeout=None)
+        self.bot = bot
+    
+    @button(
+        label = "Click Here",
+        emoji = "🎫",
+        style = discord.ButtonStyle.blurple,
+        custom_id="ticketopen"
+    )
+    async def open_ticket(
+        self,
+        interaction: discord.Interaction,
+        button: discord.Button
+    ):
+        category = discord.utils.get(interaction.guild.categories, id=OPEN_TICKET_CATEGOARY)
+
+        for channel in category.text_channels:
+            if channel.topic == interaction.user.id:
+                return await interaction.response.send_message(
+                    embed = discord.Embed(
+                        description = f":x:You already have a ticket here ({channel.mention})",
+                        color = discord.Color.red()
+                    ),
+                    ephemeral = True
+                )
+
+        staff = interaction.guild.get_role(
+            STAFF_ROLE
+        )
+
+        overwrites = {
+            interaction.guild.default_role:discord.PermissionOverwrite(read_messages=False),
+            staff:discord.PermissionOverwrite(read_messages=True)
+        }
+
+        channel = await category.create_text_channel(
+            name = "ticket-"+interaction.user.name,
+            topic = interaction.user.id,
+            overwrites=overwrites
+        )
+
+        await interaction.response.send_message(
+            embed = discord.Embed(
+                description = TICK_EMOJI+f"ticket created: {channel.mention}",
+                color = discord.Color.green()
+            ),
+            ephemeral = True
+        )
+        em=discord.Embed(title="Welcome!",
+            description=f"Support will arrive shortly,\nmake sure not to ping anyone.\nFor fast support make sure\nto drop your question before hand.",
+            color=discord.Color.dark_blue()
+        ).set_author(
+            name=interaction.user.name
+            icon_url=interaction.user.display_avatar
+        )
+        await channel.send(
+            embed=em
+        )
+
+class TicketCloseView(View):
+    def __init__()

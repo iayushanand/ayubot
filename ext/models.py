@@ -49,6 +49,9 @@ class AyuBot(commands.Bot):
         print("\033[38;2;249;226;175m" + f"{self.user.name} has connected to Discord!")
         print("\033[38;2;249;226;175m" + f"Latency: {round(self.latency*1000)} ms")
         print(Style.RESET_ALL, end="\r")
+
+        # Views
+
         self.add_view(view=view.GiveawayView(bot=self))
         self.add_view(view=view.Ban_Appeal(bot=self))
         self.add_view(view=view.VerificationView(bot=self))
@@ -56,3 +59,4 @@ class AyuBot(commands.Bot):
         self.add_view(view=view.StaffProcessView(bot=self))
         self.add_view(view=view.SelfRoleView(bot=self))
         self.add_view(view=view.UserHelpView(bot=self))
+        self.add_view(view=view.TicketOpenView(bot=self))

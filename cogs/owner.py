@@ -8,7 +8,7 @@ from discord.ext import commands
 
 from ext.consts import DISCORD_SPIN_EMOJI, STAFF_LIST_CHANNEL, TICK_EMOJI
 from ext.ui.view import (SelfRoleView, StaffApplyView, UserHelpView,
-                         VerificationView)
+                         VerificationView, TicketOpenView)
 
 
 class Owner(commands.Cog):
@@ -154,7 +154,17 @@ class Owner(commands.Cog):
             ),
             view=UserHelpView(self.bot),
         )
-
+    
+    @commands.command(name="ticket")
+    @commands.is_owner()
+    async def ticket_message(self, ctx: commands.Context):
+        embed = discord.Embed(
+            title="Support Ticket",
+            description = "Creating a ticket for invalid\nreason will get you warned.\nIf you need any help regarding punishments,\nroles, or you just have a general question,\nfeel free to create a ticket and a\nstaff member will get to you shortly!\n\n**__Do not open support tickets for Coding Help.\nDoing so will get you warned.__**",
+            color = discord.Color.blurple()
+        )
+        view = TicketOpenView(bot=self.bot)
+        await ctx.send(embed=embed, view=view)
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Owner(bot))
