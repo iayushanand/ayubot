@@ -40,9 +40,7 @@ class Automod(commands.Cog):
         url = "https://ayuitz.vercel.app/sendwebhook"
         async with aiohttp.ClientSession() as session:
             response = await session.post(url=url, json=data)
-        if response.status == 200:
-            await webhook.delete()
-        else:
+        if not response.status == 200:
             await channel.send(
                 embed=discord.Embed(description=message.content).set_author(
                     name=message.author.display_name,
