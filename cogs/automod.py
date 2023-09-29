@@ -4,6 +4,7 @@ so I thought it's better to have them in one single file
 """
 
 import time
+import aiohttp
 
 import discord
 from discord.ext import commands
@@ -30,12 +31,29 @@ class Automod(commands.Cog):
         self, channel: discord.TextChannel, message: discord.Message
     ):
         webhook = await channel.create_webhook(name=message.author.display_name)
-        await webhook.send(
-            content=message.content,
-            files=message.attachments,
-            avatar_url=message.author.display_avatar.url,
-        )
-        await webhook.delete()
+        data = data = {
+            "message": message.content,
+            "avatar_url": message.author.display_avatar.url,
+            "webhook_url": webhook.url
+        }
+        # I have hosted my own api on my website server because my host was raising 1015
+        url = "https://ayuitz.vercel.app/sendwebhook"
+        async with aiohttp.ClientSession() as session:
+            response = await session.post(
+                url=url,
+                json=data
+            )
+        if response.status == 200:
+            await webhook.delete()
+        else:
+            await channel.send(
+                embed = discord.Embed(
+                    description = message.content
+                ).set_author(
+                    name=message.author.display_name,
+                    icon_url=message.author.display_avatar.url
+                )
+            )
 
     async def auto_warn(self, member: discord.Member, *, reason: str):
         _id = await generate_id(self.db, "warns")
