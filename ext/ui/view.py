@@ -1,7 +1,10 @@
 import asyncio
+import time
 
 import asyncpg
 import discord
+
+
 from discord.ext import commands
 from discord.ui import Button, View, button
 
@@ -880,12 +883,90 @@ class TicketOpenView(View):
             description=f"Support will arrive shortly,\nmake sure not to ping anyone.\nFor fast support make sure\nto drop your question before hand.",
             color=discord.Color.dark_blue()
         ).set_author(
-            name=interaction.user.name
+            name=interaction.user.name,
             icon_url=interaction.user.display_avatar
         )
         await channel.send(
             embed=em
         )
 
+class TranscriptButton(Button):
+    def __init__(self, url: str):
+        super().__init__(
+            style = discord.ButtonStyle.url,
+            emoji="<:link:942623752523501678>",
+            url = url,
+            custom_id = "urlll"
+        )
+
 class TicketCloseView(View):
-    def __init__()
+    def __init__(self, bot: commands.Bot):
+        super().__init__(timeout=None)
+        self.bot = bot
+    
+    @button(
+        label = "Close",
+        style = discord.ButtonStyle.red,
+        custom_id = "closebtn"
+    )
+    async def close_ticket(
+        self,
+        interaction: discord.Interaction,
+        button: discord.Button,
+    ):
+        await interaction.response.send_message(
+            embed = discord.Embed(
+                description = TICK_EMOJI+"Closing Ticket",
+                color = discord.Color.green()
+            ),
+            ephemeral = True
+        )
+        await interaction.message.edit(
+            embed=interaction.message.embeds[0],
+            view=None
+        )
+        category = discord.utils.get(
+            interaction.guild.categories,
+            id=CLOSE_TICKET_CATEGOARY
+        )
+        channel = interaction.channel
+        await channel.send(
+            embed = discord.Embed(
+                description = f"Ticked Closed by {interaction.user.mention}",
+                color = discord.Color.blurple()
+            )
+        )
+        handle = interaction.guild.get_member(int(interaction.channel.topic))
+        log_channel = interaction.guild.get_channel(TICKET_LOGS_CHANNEL)
+        embed = discord.Embed(
+            title = "Ticket Closed",
+            color = discord.Color.og_blurple()
+        ).add_field(
+            name = "Opened by:",
+            value = handle.mention
+        ).add_field(
+            name = "Closed by:",
+            value = interaction.user.mention
+        ).add_field(
+            name = "Closing Time:",
+            value = f"<t:{int(time.time())}:f>"
+        )
+        view = View(timeout=None)
+        view.add_item(
+            TranscriptButton("https://www.youtube.com/watch?v=fC7oUOUEEi4")
+        )
+        log_message = await log_channel.send(
+            embed = embed,
+            view=view
+        )
+        embed.add_field(
+            name = "Logs:",
+            value = log_message.jump_url
+        )
+        try:
+            await handle.send(
+                embed=embed,
+                view=view
+            )
+        except discord.Forbidden:
+            pass
