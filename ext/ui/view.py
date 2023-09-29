@@ -20,7 +20,7 @@ from ext.consts import (
     VERIFICATION_ROLE_ID,
 )
 from utils.helper import Verification
-
+from ext.ui import modals
 
 class GiveawayView(View):
     def __init__(self, bot: commands.Bot):
