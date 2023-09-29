@@ -10,8 +10,9 @@ from ext.consts import (ANNOUNCE_EMOJI, BADGES_EMOJI, LOADING_EMOJI,
                         STAFF_FORM_CHANNEL, STAFF_ROLE, TICK_EMOJI,
                         TRIAL_MOD_ROLE, VERIFICATION_BUTTON_EMOJI,
                         VERIFICATION_MESSAGE_EMOJI, VERIFICATION_ROLE_ID)
-from utils.helper import Verification
 from ext.ui import modals
+from utils.helper import Verification
+
 
 class GiveawayView(View):
     def __init__(self, bot: commands.Bot):
