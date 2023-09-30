@@ -310,6 +310,46 @@ class Misc(commands.Cog):
             )
         file, view = result
         await ctx.send(file=file, view=view)
+    
+    @commands.command(name="add")
+    @commands.has_role(consts.STAFF_ROLE)
+    async def add(self,ctx: commands.Context,member:discord.Member):
+        if ctx.channel.category.id!=consts.OPEN_TICKET_CATEGOARY:
+            return await ctx.send(
+                embed=discord.Embed(
+                    description="This command can only be used in a ticket channel!",
+                    color=discord.Color.red()
+                )
+            )
+        await ctx.channel.set_permissions(
+            member,
+            read_messages=True,
+            send_messages=True
+        )
+        await ctx.send(
+            embed=discord.Embed(
+                description=consts.TICK_EMOJI+f"{member.mention} has been added to the ticket!",
+                color=discord.Color.green()
+            )
+        )
+
+    @commands.command(name="remove")
+    @commands.has_role(consts.STAFF_ROLE)
+    async def remove(self,ctx,member:discord.Member):
+        if ctx.channel.category.id!=consts.OPEN_TICKET_CATEGOARY:
+            return await ctx.send(
+                embed=discord.Embed(
+                    description=":x:This command can only be used in a ticket channel!",
+                    color=discord.Color.red()
+                )
+            )
+        await ctx.channel.set_permissions(member,read_messages=False,send_messages=False)
+        await ctx.send(
+            embed=discord.Embed(
+                description=consts.TICK_EMOJI+f"{member.mention} has been removed from the ticket!",
+                color=discord.Color.green()
+            )
+        )
 
 
 async def setup(bot: commands.Bot):
