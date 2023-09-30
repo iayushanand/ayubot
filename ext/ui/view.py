@@ -900,17 +900,15 @@ class TranscriptButton(Button):
 class PostCloseView(View):
     def __init__(self):
         super().__init__(timeout=None)
-    
+
     @button(
-        label = "Delete Ticket",
-        style = discord.ButtonStyle.gray,
-        custom_id = "delete",
-        emoji = "🚮",
+        label="Delete Ticket",
+        style=discord.ButtonStyle.gray,
+        custom_id="delete",
+        emoji="🚮",
     )
     async def delete_ticket(
-        self,
-        interaction: discord.Interaction,
-        button: discord.Button
+        self, interaction: discord.Interaction, button: discord.Button
     ):
         await interaction.response.send_message("**Deleting Ticket in 5 seconds!**")
         await asyncio.sleep(5)
@@ -942,22 +940,19 @@ class TicketCloseView(View):
         staff = interaction.guild.get_role(STAFF_ROLE)
 
         overwrites = {staff: discord.PermissionOverwrite(read_messages=True)}
-        await channel.edit(
-            category=category,
-            overwrites=overwrites
-        )
+        await channel.edit(category=category, overwrites=overwrites)
         await channel.send(
             embed=discord.Embed(
                 description=f"Ticked Closed by {interaction.user.mention}",
                 color=discord.Color.blurple(),
             ),
-            view = PostCloseView()
+            view=PostCloseView(),
         )
         handle = interaction.guild.get_member(int(interaction.channel.topic))
         log_channel = interaction.guild.get_channel(TICKET_LOGS_CHANNEL)
 
         await get_transcript(member=handle, channel=interaction.channel)
-        file_name = upload(f'asset/tickets/{handle.id}.html', handle.name)
+        file_name = upload(f"asset/tickets/{handle.id}.html", handle.name)
         link = f"https://ayuitz.vercel.app/tickets?id={file_name}"
         embed = (
             discord.Embed(
