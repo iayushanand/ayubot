@@ -349,7 +349,7 @@ def upload(file_path: str, member_name: str):
     repo = github.get_repo("iayushanand/ayuitzxyz")
     file_name = f"{int(time.time())}"
     repo.create_file(
-        path=f"templates/ticket/{file_name}.html",
+        path=f"templates/tickets/{file_name}.html",
         message="Ticket Log for {0}".format(member_name),
         branch="main",
         content=open(f"{file_path}", "r", encoding="utf-8").read(),

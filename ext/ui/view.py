@@ -959,7 +959,7 @@ class TicketCloseView(View):
 
         await get_transcript(member=handle, channel=interaction.channel)
         file_name = upload(f"asset/tickets/{handle.id}.html", handle.name)
-        link = f"https://ayuitz.vercel.app/tickets?id={file_name}"
+        link = f"https://ayuitz.vercel.app/ticket?id={file_name}"
         embed = (
             discord.Embed(
                 title="Ticket Closed",
