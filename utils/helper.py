@@ -4,18 +4,23 @@ import datetime as dt
 import random
 import string
 import time
-from io import BytesIO
-from typing import Tuple
-
-import aiohttp
 import discord
 import humanize
+import aiohttp
+import os
+import chat_exporter
+
 from captcha.image import ImageCaptcha
+from io import BytesIO
+from typing import Tuple
 from cbvx import iml
 from discord.ext import commands
 from easy_pil import Canvas, Editor
 from PIL import Image, ImageChops, ImageDraw, ImageFont
+from dotenv import load_dotenv
+from github import Github
 
+load_dotenv()
 
 def circle(pfp, size=(110, 110)):
     pfp = pfp.resize(size).convert("RGBA")
@@ -330,7 +335,22 @@ def check_hex(color: str):
     return True
 
 
-# WIP
-def filter_words(word: str, sentence: str):
-    filtered = sentence.replace(f"{word[1:]}", "\*" * len(word[1:]))
-    ...
+async def get_transcript(member: discord.Member, channel: discord.TextChannel):
+    export = await chat_exporter.export(channel=channel)
+    file_name=f"asset/tickets/{member.id}.html"
+    with open(file_name, "w", encoding="utf-8") as f:
+        f.write(export)
+
+def upload(file_path: str, member_name: str):
+    gtoken = os.getenv("github_token")
+    github = Github(gtoken)
+    repo = github.get_repo("iayushanand/ayuitzxyz")
+    file_name = f"{int(time.time())}"
+    repo.create_file(
+        path=f"templates/ticket/{file_name}.html",
+        message="Ticket Log for {0}".format(member_name),
+        branch="main",
+        content=open(f"{file_path}","r",encoding="utf-8").read()
+    )
+    os.remove(file_path)
+    return file_name

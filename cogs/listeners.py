@@ -150,9 +150,9 @@ class Listeners(commands.Cog):
                     )
                 )
                 # I may try do this in a simpler way but I am feeling sleepy rn so will fix it later
-                for lev in range(level):
+                for lev in range(1, level+1):
                     for role in message.guild.roles:
-                        if f"「 Level {lev} + 」" in role.name:
+                        if f"—͟͞͞𒁷 「 Level {lev} + 」𒌍" in role.name:
                             await message.author.add_roles(role)
                             break
                 return

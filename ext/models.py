@@ -60,3 +60,4 @@ class AyuBot(commands.Bot):
         self.add_view(view=view.SelfRoleView(bot=self))
         self.add_view(view=view.UserHelpView(bot=self))
         self.add_view(view=view.TicketOpenView(bot=self))
+        self.add_view(view=view.PostCloseView())
