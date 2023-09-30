@@ -862,7 +862,7 @@ class TicketOpenView(View):
                 read_messages=False
             ),
             staff: discord.PermissionOverwrite(read_messages=True),
-            interaction.user: discord.PermissionOverwrite(read_messages=True)
+            interaction.user: discord.PermissionOverwrite(read_messages=True),
         }
 
         channel = await category.create_text_channel(
