@@ -13,3 +13,5 @@ easy-pil==0.3.0
 pytimeparser==0.2.0
 humanize==4.8.0
 captcha==0.5.0
+chat-exporter==2.6.1 
+PyGithub==2.1.1
