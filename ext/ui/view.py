@@ -862,6 +862,7 @@ class TicketOpenView(View):
                 read_messages=False
             ),
             staff: discord.PermissionOverwrite(read_messages=True),
+            interaction.user: discord.PermissionOverwrite(read_messages=True)
         }
 
         channel = await category.create_text_channel(
@@ -939,7 +940,12 @@ class TicketCloseView(View):
         channel = interaction.channel
         staff = interaction.guild.get_role(STAFF_ROLE)
 
-        overwrites = {staff: discord.PermissionOverwrite(read_messages=True)}
+        overwrites = {
+            interaction.guild.default_role: discord.PermissionOverwrite(
+                read_messages=False
+            ),
+            staff: discord.PermissionOverwrite(read_messages=True),
+        }
         await channel.edit(category=category, overwrites=overwrites)
         await channel.send(
             embed=discord.Embed(
