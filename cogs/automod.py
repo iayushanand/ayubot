@@ -18,7 +18,8 @@ class Automod(commands.Cog):
         self.db = bot.db
 
     def get_banned_words(self):
-        return open("asset/misc/banned_words.txt").read().lower().split(", ")
+        with open("asset/misc/banned_words.txt", 'r') as f:
+            return f.read().lower().split(", ")
 
     def filter_words(self, filter_words: str, message: str) -> str:
         for word in filter_words:
@@ -61,6 +62,8 @@ class Automod(commands.Cog):
 
     @commands.Cog.listener(name="on_message")
     async def check_messages(self, message: discord.Message):
+        if message.author.bot:
+            return
         banned_words = self.get_banned_words()
         found_words = []
         # words check

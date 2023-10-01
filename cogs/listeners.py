@@ -255,7 +255,7 @@ class Listeners(commands.Cog):
 
     @commands.Cog.listener(name="on_member_join")
     async def welcome_message(self, member: discord.Member):
-        if not member.guild.id == GUILD_ID:
+        if not member.guild.id == GUILD_ID or member.bot:
             return
         banner = await WelcomeBanner(self.bot).create_banner(member=member)
         channel = self.bot.get_channel(WELCOME_CHANNEL_ID)

@@ -23,7 +23,7 @@ from PIL import Image, ImageChops, ImageDraw, ImageFont
 load_dotenv()
 
 
-def circle(pfp, size=(110, 110)):
+def circle(pfp, size=(250, 250)):
     pfp = pfp.resize(size).convert("RGBA")
 
     bigsize = (pfp.size[0] * 3, pfp.size[1] * 3)
