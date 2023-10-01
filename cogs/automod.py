@@ -18,7 +18,7 @@ class Automod(commands.Cog):
         self.db = bot.db
 
     def get_banned_words(self):
-        with open("asset/misc/banned_words.txt", 'r') as f:
+        with open("asset/misc/banned_words.txt", "r") as f:
             return f.read().lower().split(", ")
 
     def filter_words(self, filter_words: str, message: str) -> str:
