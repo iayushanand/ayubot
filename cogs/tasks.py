@@ -16,6 +16,7 @@ class TaskCog(commands.Cog):
         self.db: asyncpg.Connection = bot.db
 
     async def cog_load(self) -> None:
+        await self.bot.wait_until_ready()
         self.set_slowmode.start()
         self.giveaway_end.start()
         self.send_bump_message.start()
