@@ -116,9 +116,7 @@ class Listeners(commands.Cog):
         xp = (
             0.3
             if booster in message.author.roles
-            else 0.2
-            if bumper_role in message.author.roles
-            else 0.1
+            else 0.2 if bumper_role in message.author.roles else 0.1
         )
         user_data = [message.author.id, get_xp(message.content, xp)]
         res = await self.db.fetch(
