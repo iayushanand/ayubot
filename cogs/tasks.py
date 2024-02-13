@@ -16,7 +16,6 @@ class TaskCog(commands.Cog):
         self.db: asyncpg.Connection = bot.db
 
     async def cog_load(self) -> None:
-        await self.bot.wait_until_ready()
         self.set_slowmode.start()
         self.giveaway_end.start()
         self.send_bump_message.start()
@@ -52,8 +51,9 @@ class TaskCog(commands.Cog):
             return
         channel = self.bot.get_channel(int(res[0].get("channel_id")))
         message_id = int(res[0].get("message_id"))
-        message = await channel.fetch_message(message_id)
-        if not message:
+        try:
+            message = await channel.fetch_message(message_id)
+        except:
             return await self.db.execute(
                 "DELETE FROM gaway WHERE message_id = $1", message_id
             )
