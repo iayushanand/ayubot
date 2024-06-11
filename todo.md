@@ -5,14 +5,20 @@
 
 - [x] Add reminder command
 
-- [ ] work on welcome embed
+- [x] work on welcome embed
 
-- [ ] add a verifitcation system
+- [x] add a verifitcation system
 
-- [ ] add a self role
+- [x] add a self role
 
-- [ ] staff list
+- [x] staff list
 
 - [ ] staff application
 
-- [ ] 
+- [ ] Giveaways
+
+- [ ] Music? Maybe?
+
+- [ ] Fun
+
+- [ ] Economy
